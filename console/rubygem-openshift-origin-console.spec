@@ -9,7 +9,7 @@
 
 Summary:        OpenShift Origin Management Console
 Name:           rubygem-%{gem_name}
-Version:        1.0.9
+Version:        1.0.10
 Release:        1%{?dist}
 Group:          Development/Languages
 License:        ASL 2.0
@@ -122,6 +122,12 @@ rm -rf %{buildroot}
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Tue Feb 05 2013 Chris Alfonso <calfonso@redhat.com> 1.0.10-1
+- BZ906227 - The Follow these steps to install the client link on get started
+  page... (calfonso@redhat.com)
+- BZ903526 - Display overlaps when adding sshkey using long name in IE 9
+  (calfonso@redhat.com)
+
 * Wed Jan 30 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.0.9-1
 - Bug 895355 - fixing the missing . before the domain on the /account page
   (bleanhar@redhat.com)
