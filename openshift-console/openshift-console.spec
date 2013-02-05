@@ -9,7 +9,7 @@
 
 Summary:   The OpenShift Enterprise Management Console
 Name:      openshift-console
-Version:   0.0.15
+Version:   0.0.16
 Release:   1%{?dist}
 Group:     Network/Daemons
 License:   ASL 2.0
@@ -159,6 +159,11 @@ chcon -R -t httpd_var_run_t %{consoledir}/httpd/run
 /sbin/restorecon -R -v /var/run
 /sbin/restorecon -rv %{gemdir}/passenger*
 %changelog
+* Tue Feb 05 2013 Chris Alfonso <calfonso@redhat.com> 0.0.16-1
+- Removing assets/assets (calfonso@redhat.com)
+- BZ903526 - Display overlaps when adding sshkey using long name in IE 9
+  (calfonso@redhat.com)
+
 * Wed Jan 23 2013 Chris Alfonso <calfonso@redhat.com> 0.0.15-1
 - Revised formtastic to handle hints for inline elements (hripps@redhat.com)
 
