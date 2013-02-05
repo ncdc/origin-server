@@ -1,6 +1,6 @@
 Summary:        Utility scripts for the OpenShift Origin broker
 Name:           openshift-origin-broker-util
-Version:        1.0.14
+Version:        1.0.15
 Release:        1%{?dist}
 Group:          Network/Daemons
 License:        ASL 2.0
@@ -60,6 +60,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/oo-accept-systems.8.gz
 
 %changelog
+* Tue Feb 05 2013 Luke Meyer <lmeyer@redhat.com> 1.0.15-1
+- <oo-accept-systems> fix bug 893896 - allow -w .5 and improve parameter error
+  report (lmeyer@redhat.com)
+- <oo-accept-broker> fix bug 905656 - exit message and status
+  (lmeyer@redhat.com)
+
 * Tue Jan 08 2013 Chris Alfonso <calfonso@redhat.com> 1.0.14-1
 - Adding mongo SSL connection support, default is SSL is off
   (calfonso@redhat.com)
