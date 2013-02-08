@@ -5,7 +5,7 @@
 
 Summary:        Cloud Development Controller
 Name:           rubygem-%{gemname}
-Version: 1.0.11
+Version: 1.0.12
 Release:        1%{?dist}
 Group:          Development/Languages
 License:        ASL 2.0
@@ -65,6 +65,9 @@ rm -rf %{buildroot}
 %{gemdir}/specifications/%{gemname}-%{version}.gemspec
 
 %changelog
+* Fri Feb 08 2013 Chris Alfonso <calfonso@redhat.com> 1.0.12-1
+- BZ909382 - Mongo SSL does not work with replica set (calfonso@redhat.com)
+
 * Tue Jan 08 2013 Chris Alfonso <calfonso@redhat.com> 1.0.11-1
 - Adding mongo SSL connection support, default is SSL is off
   (calfonso@redhat.com)
