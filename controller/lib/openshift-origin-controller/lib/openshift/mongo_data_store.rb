@@ -176,7 +176,7 @@ module OpenShift
 
     def db
       if @replica_set
-        con = Mongo::ReplSetConnection.new(*@host_port << {:read => :secondary, :connect_timeout => 60, :ssl => @ssl})
+        con = Mongo::ReplSetConnection.new(@host_port ,:read => :secondary, :connect_timeout => 60, :ssl => @ssl)
       else
         con = Mongo::Connection.new(@host_port[0], @host_port[1], :ssl => @ssl)
       end
