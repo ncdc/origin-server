@@ -3,7 +3,7 @@
 
 Summary:   OpenShift Origin broker components
 Name:      openshift-origin-broker
-Version:   1.0.11
+Version:   1.0.12
 Release:   1%{?dist}
 Group:     Network/Daemons
 License:   ASL 2.0
@@ -185,6 +185,13 @@ chcon -R -t httpd_var_run_t %{brokerdir}/httpd/run
 /sbin/restorecon -R -v /var/run
 
 %changelog
+* Fri Feb 22 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.0.12-1
+- Bug 913213 - Making sure the user pulls the latest bson_ext package for
+  Enterprise (bleanhar@redhat.com)
+- Bug 913213 - Ensure rubygem-bson_ext is updated, loaded and used
+  (bleanhar@redhat.com)
+- Enterprise does not support the Legacy API (bleanhar@redhat.com)
+
 * Wed Jan 30 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.0.11-1
 - Bug 902630: fix `service openshift-broker reload` (miciah.masters@gmail.com)
 
