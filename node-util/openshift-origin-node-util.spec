@@ -1,6 +1,6 @@
 Summary:        Utility scripts for the OpenShift Origin broker
 Name:           openshift-origin-node-util
-Version:        1.0.7
+Version:        1.0.8
 Release:        1%{?dist}
 
 Group:          Network/Daemons
@@ -98,6 +98,9 @@ rm -rf $RPM_BUILD_ROOT
 /sbin/restorecon /usr/sbin/oo-restorer* || :
 
 %changelog
+* Fri Feb 22 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.0.8-1
+- Bug 912366 - Fixing syntax error in restorer.php (bleanhar@redhat.com)
+
 * Tue Jan 15 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.0.7-1
 - Tweaking the regex in restorer.php and escaping the arg (bleanhar@redhat.com)
 
