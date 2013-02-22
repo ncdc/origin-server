@@ -25,7 +25,7 @@ Requires:  mongodb-server
 Requires:  policycoreutils-python
 Requires:  rubygem(rails)
 Requires:  rubygem(xml-simple)
-Requires:  rubygem(bson_ext)
+Requires:  rubygem(bson_ext) >= 1.8.0
 Requires:  rubygem(rest-client)
 Requires:  rubygem(thread-dump)
 Requires:  rubygem(parseconfig)
