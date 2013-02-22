@@ -3,7 +3,7 @@
 list($blank, $uuid, $blank) = split("/", $_SERVER["PATH_INFO"]);
 if (preg_match('/^[0-9a-fA-F]{32}$/', $uuid)) {
     $safe_uuid = escapeshellarg($uuid);
-    shell_exec("/usr/sbin/oo-restorer-wrapper.sh $safe_uuid}");
+    shell_exec("/usr/sbin/oo-restorer-wrapper.sh ${safe_uuid}");
     sleep(2);
     $host = $_SERVER['HTTP_HOST'];
     $proto = "http" . ( isset($_SERVER['HTTPS']) ? 's' : '' ) . '://';
