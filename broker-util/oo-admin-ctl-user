@@ -176,6 +176,13 @@ end
 
 def add_gear_size(user, gear_size)
     print "Adding gear size #{gear_size} for user #{user.login}... "
+
+    available_sizes = Rails.configuration.openshift[:gear_sizes]
+    if ! available_sizes.include? gear_size
+      puts "Size #{gear_size} is not defined. Defined sizes are: #{available_sizes.join ', '}."
+      exit 1
+    end
+
     gear_sizes = []
     gear_sizes = user.capabilities['gear_sizes'] if user.capabilities.has_key?('gear_sizes')
     
