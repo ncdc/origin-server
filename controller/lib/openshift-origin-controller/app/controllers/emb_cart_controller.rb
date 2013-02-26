@@ -100,9 +100,11 @@ class EmbCartController < BaseController
                         101, "EMBED_CARTRIDGE") unless application
 
     begin
-      #container = OpenShift::ApplicationContainerProxy.find_available(application.server_identity)
-      container = OpenShift::ApplicationContainerProxy.find_available(nil)
-      if not check_cartridge_type(name, container, "embedded")
+      # check that the cartridge type is valid for the app.
+      # Currently this doesn't actually use the profile or container at all, so don't waste a lookup.
+      #container = OpenShift::ApplicationContainerProxy.find_available(application.node_profile)
+      #if not check_cartridge_type(name, container, "embedded")
+      if not check_cartridge_type(name, nil, "embedded")
         carts = Application.get_available_cartridges("embedded")
         return render_error(:bad_request, "Invalid cartridge. Valid values are (#{carts.join(', ')})",
                             109, "EMBED_CARTRIDGE", "cartridge")
