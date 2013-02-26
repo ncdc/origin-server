@@ -5,7 +5,7 @@
 
 Summary:        Cloud Development Controller
 Name:           rubygem-%{gemname}
-Version: 1.0.12
+Version: 1.0.13
 Release:        1%{?dist}
 Group:          Development/Languages
 License:        ASL 2.0
@@ -65,6 +65,10 @@ rm -rf %{buildroot}
 %{gemdir}/specifications/%{gemname}-%{version}.gemspec
 
 %changelog
+* Tue Feb 26 2013 Luke Meyer <lmeyer@redhat.com> 1.0.13-1
+- <app controller> fix bug 912038 - DEFAULT_GEAR_SIZE in broker.conf is not
+  actually used as the default gear size
+
 * Fri Feb 08 2013 Chris Alfonso <calfonso@redhat.com> 1.0.12-1
 - BZ909382 - Mongo SSL does not work with replica set (calfonso@redhat.com)
 
