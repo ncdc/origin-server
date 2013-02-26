@@ -5,7 +5,7 @@
 
 Summary:        Cloud Development Controller
 Name:           rubygem-%{gemname}
-Version: 1.0.13
+Version: 1.0.14
 Release:        1%{?dist}
 Group:          Development/Languages
 License:        ASL 2.0
@@ -65,6 +65,10 @@ rm -rf %{buildroot}
 %{gemdir}/specifications/%{gemname}-%{version}.gemspec
 
 %changelog
+* Tue Feb 26 2013 Luke Meyer <lmeyer@redhat.com> 1.0.14-1
+- <emb_cart_controller> bug 914429 - Can't embed cartridge into app if all the
+  nodes are in districts and no district is "small" size. (#noupstream)
+
 * Tue Feb 26 2013 Luke Meyer <lmeyer@redhat.com> 1.0.13-1
 - <app controller> fix bug 912038 - DEFAULT_GEAR_SIZE in broker.conf is not
   actually used as the default gear size
