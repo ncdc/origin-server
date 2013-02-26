@@ -1,6 +1,6 @@
 Summary:        Utility scripts for the OpenShift Origin broker
 Name:           openshift-origin-broker-util
-Version:        1.0.15
+Version:        1.0.16
 Release:        1%{?dist}
 Group:          Network/Daemons
 License:        ASL 2.0
@@ -60,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/oo-accept-systems.8.gz
 
 %changelog
+* Tue Feb 26 2013 Luke Meyer <lmeyer@redhat.com> 1.0.16-1
+- bug 915224 <oo-admin-ctl-user> validate --addgearsize before adding
+- bug 895911 - "oo-admin-ctl-user --setmaxgears" validate maxgears  #cherrypick
 * Tue Feb 05 2013 Luke Meyer <lmeyer@redhat.com> 1.0.15-1
 - <oo-accept-systems> fix bug 893896 - allow -w .5 and improve parameter error
   report (lmeyer@redhat.com)
