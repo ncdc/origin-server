@@ -54,7 +54,7 @@ class ApplicationsController < BaseController
     scale = get_bool(params[:scale])
 
     template_id = params[:template]
-    node_profile = params[:gear_profile]
+    node_profile = params[:gear_profile] || Rails.configuration.openshift[:default_gear_size]
     node_profile.downcase! if node_profile
 
     domain = Domain.get(@cloud_user, domain_id)
