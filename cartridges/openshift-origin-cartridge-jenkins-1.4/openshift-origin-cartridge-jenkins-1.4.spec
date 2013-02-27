@@ -17,7 +17,7 @@ Requires: openshift-origin-cartridge-abstract
 Requires: rubygem(openshift-origin-node)
 #https://issues.jenkins-ci.org/browse/JENKINS-15047
 Requires: java >= 1.6
-Requires: jenkins
+Requires: jenkins >= 1.502 
 Requires: jenkins-plugin-openshift
 Obsoletes: cartridge-jenkins-1.4
 
