@@ -42,11 +42,11 @@ module OpenShift
     def self.blacklisted_in_impl?(name)
     end
 
-    def self.get_all_gears
-      @proxy_provider.get_all_gears_impl
+    def self.get_all_gears(opts = {})
+      @proxy_provider.get_all_gears_impl(opts)
     end
 
-    def self.get_all_gears_impl
+    def self.get_all_gears_impl(opts)
     end
 
     def self.execute_parallel_jobs(handle)
