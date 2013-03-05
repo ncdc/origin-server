@@ -9,7 +9,7 @@
 
 Summary:   The OpenShift Enterprise Management Console
 Name:      openshift-console
-Version:   0.0.17
+Version:   0.0.18
 Release:   1%{?dist}
 Group:     Network/Daemons
 License:   ASL 2.0
@@ -159,6 +159,9 @@ chcon -R -t httpd_var_run_t %{consoledir}/httpd/run
 /sbin/restorecon -R -v /var/run
 /sbin/restorecon -rv %{gemdir}/passenger*
 %changelog
+* Tue Mar 05 2013 Chris Alfonso <calfonso@redhat.com> 0.0.18-1
+- BZ913376 - The favicon cannot be displayed (calfonso@redhat.com)
+
 * Tue Mar 05 2013 Chris Alfonso <calfonso@redhat.com> 0.0.17-1
 - BZ896363 - 'the User Guide' link should redirect to an existing url
   (calfonso@redhat.com)
