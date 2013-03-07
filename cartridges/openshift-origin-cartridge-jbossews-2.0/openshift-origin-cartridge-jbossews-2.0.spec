@@ -133,7 +133,7 @@ rm -rf %{buildroot}
 %{cartridgedir}/README
 %doc %{cartridgedir}/COPYRIGHT
 %doc %{cartridgedir}/LICENSE
-%config(noreplace) %{cartridgedir}/info/configuration/
+%config %{cartridgedir}/info/configuration/
 
 
 %changelog
