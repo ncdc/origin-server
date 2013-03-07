@@ -4,7 +4,7 @@
 
 Summary:   Provides JBossEAP6.0 support
 Name:      openshift-origin-cartridge-jbosseap-6.0
-Version:   1.0.4
+Version:   1.0.5
 Release:   1%{?dist}
 Group:     Development/Languages
 License:   ASL 2.0
@@ -169,6 +169,10 @@ rm -rf %{buildroot}
 %config %{cartridgedir}/info/bin/standalone.conf
 
 %changelog
+* Thu Mar 07 2013 Chris Alfonso <calfonso@redhat.com> 1.0.5-1
+- BZ906841 - standalone.conf should be labeled %%config in the specfile
+  (calfonso@redhat.com)
+
 * Mon Feb 04 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.0.4-1
 - Bug 906845 - create default resource settings for AS/EAP/EWS carts
   (bleanhar@redhat.com)
