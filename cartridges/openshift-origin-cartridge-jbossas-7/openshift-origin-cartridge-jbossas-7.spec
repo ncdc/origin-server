@@ -155,8 +155,8 @@ rm -rf %{buildroot}
 %{cartridgedir}/README
 %doc %{cartridgedir}/COPYRIGHT
 %doc %{cartridgedir}/LICENSE
-%config(noreplace) %{cartridgedir}/info/configuration/
-
+%config %{cartridgedir}/info/configuration/
+%config %{cartridgedir}/info/bin/standalone.conf
 
 %changelog
 * Tue Oct 30 2012 Adam Miller <admiller@redhat.com> 1.0.1-1
