@@ -4,7 +4,7 @@
 
 Summary:   Provides JBossAS7 support
 Name:      openshift-origin-cartridge-jbossas-7
-Version: 1.0.1
+Version: 1.0.2
 Release:   1%{?dist}
 Group:     Development/Languages
 License:   ASL 2.0
@@ -159,6 +159,11 @@ rm -rf %{buildroot}
 %config %{cartridgedir}/info/bin/standalone.conf
 
 %changelog
+* Thu Mar 07 2013 Chris Alfonso <calfonso@redhat.com> 1.0.2-1
+- BZ906841 - standalone.conf should be labeled %%config in the specfile
+  (calfonso@redhat.com)
+- Bug 887353: removing a cartridge leaves info/ dir (miciah.masters@gmail.com)
+
 * Tue Oct 30 2012 Adam Miller <admiller@redhat.com> 1.0.1-1
 - bumping specs to at least 1.0.0 (dmcphers@redhat.com)
 
