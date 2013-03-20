@@ -58,6 +58,13 @@ end
 
 action "get_all_gears", :description => "get info about all gears" do
     display :always
+
+    input :with_broker_key_auth,
+        :prompt         => "Broker auth key",
+        :description    => "Return only gears using broker auth keys",
+        :type           => :boolean,
+        :optional       => true
+
     output  :output,
             :description => "Gear information",
             :display_as => "Output"

@@ -1513,10 +1513,12 @@ module OpenShift
           rpc_client
       end
 
-      def self.get_all_gears_impl
+      def self.get_all_gears_impl(opts)
         gear_map = {}
+        args = opts.merge({:gear_map => gear_map})
+
         rpc_exec('openshift') do |client|
-          client.get_all_gears(:gear_map => {}) do |response|
+          client.get_all_gears(args) do |response|
             if response[:body][:statuscode] == 0
               sub_gear_map = response[:body][:data][:output]
               sender = response[:senderid]

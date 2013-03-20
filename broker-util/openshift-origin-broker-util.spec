@@ -8,6 +8,8 @@ URL:            http://openshift.redhat.com
 Source0:        http://mirror.openshift.com/pub/openshift-origin/source/%{name}-%{version}.tar.gz
 
 Requires:       openshift-broker
+# For oo-admin-broker-auth
+Requires:       mcollective-client
 Requires:       ruby(abi) >= 1.8
 %if 0%{?fedora} >= 17
 BuildRequires:  rubygems-devel
@@ -44,6 +46,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(0755,-,-) %{_sbindir}/oo-admin-ctl-domain
 %attr(0755,-,-) %{_sbindir}/oo-admin-ctl-user
 %attr(0755,-,-) %{_sbindir}/oo-admin-move
+%attr(0755,-,-) %{_sbindir}/oo-admin-broker-auth
 %attr(0755,-,-) %{_sbindir}/oo-register-dns
 %attr(0755,-,-) %{_sbindir}/oo-accept-broker
 %attr(0755,-,-) %{_sbindir}/oo-accept-systems
@@ -55,6 +58,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/oo-admin-ctl-domain.8.gz
 %{_mandir}/man8/oo-admin-ctl-user.8.gz
 %{_mandir}/man8/oo-admin-move.8.gz
+%{_mandir}/man8/oo-admin-broker-auth.8.gz
 %{_mandir}/man8/oo-register-dns.8.gz
 %{_mandir}/man8/oo-accept-broker.8.gz
 %{_mandir}/man8/oo-accept-systems.8.gz
