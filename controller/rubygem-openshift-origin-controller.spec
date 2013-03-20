@@ -5,7 +5,7 @@
 
 Summary:        Cloud Development Controller
 Name:           rubygem-%{gemname}
-Version: 1.0.14
+Version: 1.0.15
 Release:        1%{?dist}
 Group:          Development/Languages
 License:        ASL 2.0
@@ -65,6 +65,11 @@ rm -rf %{buildroot}
 %{gemdir}/specifications/%{gemname}-%{version}.gemspec
 
 %changelog
+* Wed Mar 20 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.0.15-1
+- Adding oo-admin-broker-auth (bleanhar@redhat.com)
+- Adding the ability to fetch all gears with broker auth tokens
+  (bleanhar@redhat.com)
+
 * Tue Feb 26 2013 Luke Meyer <lmeyer@redhat.com> 1.0.14-1
 - <emb_cart_controller> bug 914429 - Can't embed cartridge into app if all the
   nodes are in districts and no district is "small" size. (#noupstream)
