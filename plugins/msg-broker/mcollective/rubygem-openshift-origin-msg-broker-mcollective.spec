@@ -5,7 +5,7 @@
 
 Summary:        OpenShift plugin for mcollective service
 Name:           rubygem-%{gemname}
-Version: 1.0.4
+Version: 1.0.5
 Release:        1%{?dist}
 Group:          Development/Languages
 License:        ASL 2.0
@@ -64,6 +64,10 @@ rm -rf %{buildroot}
 %{_sysconfdir}/openshift/plugins.d/openshift-origin-msg-broker-mcollective.conf.example
 
 %changelog
+* Wed Mar 20 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.0.5-1
+- Adding the ability to fetch all gears with broker auth tokens
+  (bleanhar@redhat.com)
+
 * Thu Dec 20 2012 Brenton Leanhardt <bleanhar@redhat.com> 1.0.4-1
 - Removing our ruby- subpackages (bleanhar@redhat.com)
 
