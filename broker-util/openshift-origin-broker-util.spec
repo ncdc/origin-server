@@ -1,6 +1,6 @@
 Summary:        Utility scripts for the OpenShift Origin broker
 Name:           openshift-origin-broker-util
-Version:        1.0.16
+Version:        1.0.17
 Release:        1%{?dist}
 Group:          Network/Daemons
 License:        ASL 2.0
@@ -64,6 +64,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/oo-accept-systems.8.gz
 
 %changelog
+* Wed Mar 20 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.0.17-1
+- Bug 921257 - Warn users to change the default AUTH_SALT (bleanhar@redhat.com)
+- Adding oo-admin-broker-auth (bleanhar@redhat.com)
+
 * Tue Feb 26 2013 Luke Meyer <lmeyer@redhat.com> 1.0.16-1
 - bug 915224 <oo-admin-ctl-user> validate --addgearsize before adding
 - bug 895911 - "oo-admin-ctl-user --setmaxgears" validate maxgears  #cherrypick
