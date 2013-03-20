@@ -3,7 +3,7 @@
 
 Summary:   OpenShift Origin broker components
 Name:      openshift-origin-broker
-Version:   1.0.12
+Version:   1.0.13
 Release:   1%{?dist}
 Group:     Network/Daemons
 License:   ASL 2.0
@@ -185,6 +185,9 @@ chcon -R -t httpd_var_run_t %{brokerdir}/httpd/run
 /sbin/restorecon -R -v /var/run
 
 %changelog
+* Wed Mar 20 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.0.13-1
+- Bug 921257 - Warn users to change the default AUTH_SALT (bleanhar@redhat.com)
+
 * Fri Feb 22 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.0.12-1
 - Bug 913213 - Making sure the user pulls the latest bson_ext package for
   Enterprise (bleanhar@redhat.com)
