@@ -7,7 +7,7 @@
 
 Summary:        Cloud Development Node
 Name:           rubygem-%{gemname}
-Version:	1.0.12
+Version:	1.0.13
 Release:        1%{?dist}
 Group:          Development/Languages
 License:        ASL 2.0
@@ -155,6 +155,10 @@ if ! [ -f /etc/openshift/resource_limits.conf ]; then
 fi
 
 %changelog
+* Thu Mar 21 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.0.13-1
+- Bug 924405 - Protect ssh key edits with a mutex and lock file. #upstream
+  (rmillner@redhat.com)
+
 * Thu Jan 31 2013 Luke Meyer <lmeyer@redhat.com> 1.0.12-1
 - <facter,resource_limits> active_capacity/max_active_apps/etc switched to
   gear-based accounting (lmeyer@redhat.com)
