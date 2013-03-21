@@ -1,6 +1,6 @@
 Summary:        Utility scripts for the OpenShift Origin broker
 Name:           openshift-origin-broker-util
-Version:        1.0.17
+Version:        1.0.18
 Release:        1%{?dist}
 Group:          Network/Daemons
 License:        ASL 2.0
@@ -64,6 +64,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man8/oo-accept-systems.8.gz
 
 %changelog
+* Thu Mar 21 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.0.18-1
+- Bug 911455 - Unrestricted the session secret in Openshift Origin server
+  (bleanhar@redhat.com)
+
 * Wed Mar 20 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.0.17-1
 - Bug 921257 - Warn users to change the default AUTH_SALT (bleanhar@redhat.com)
 - Adding oo-admin-broker-auth (bleanhar@redhat.com)
