@@ -1,11 +1,13 @@
 # Be sure to restart your server when you modify this file.
+require 'console/config_file'
 
-conf_file = File.join(OpenShift::Config::CONF_DIR, 'console.conf')
-conf = OpenShift::Config.new(conf_file)
+file = "/etc/openshift/console.conf"
+conf = Console::ConfigFile.new(file)
 
-session_secret = conf.get("SESSION_SECRET")
+
+session_secret = conf[:SESSION_SECRET]
 if session_secret.blank?
-  Rails.logger.warn "\nWARNING: Please configure SESSION_SECRET in #{conf_file}.  " +
+  Rails.logger.warn "\nWARNING: Please configure SESSION_SECRET in /etc/openshift/console.conf.  " +
                      "Run oo-accept-broker for details."
 
   # We don't want to prevent an application from starting if this new setting
