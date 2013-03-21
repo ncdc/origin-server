@@ -3,7 +3,7 @@
 
 Summary:   OpenShift Origin broker components
 Name:      openshift-origin-broker
-Version:   1.0.13
+Version:   1.0.14
 Release:   1%{?dist}
 Group:     Network/Daemons
 License:   ASL 2.0
@@ -185,6 +185,12 @@ chcon -R -t httpd_var_run_t %{brokerdir}/httpd/run
 /sbin/restorecon -R -v /var/run
 
 %changelog
+* Thu Mar 21 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.0.14-1
+- Changing from ERROR to WARNING so that admins don't think we failed to start
+  the app. (bleanhar@redhat.com)
+- Bug 911455 - Unrestricted the session secret in Openshift Origin server
+  (bleanhar@redhat.com)
+
 * Wed Mar 20 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.0.13-1
 - Bug 921257 - Warn users to change the default AUTH_SALT (bleanhar@redhat.com)
 
