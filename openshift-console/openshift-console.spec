@@ -9,7 +9,7 @@
 
 Summary:   The OpenShift Enterprise Management Console
 Name:      openshift-console
-Version:   0.0.18
+Version:   0.0.19
 Release:   1%{?dist}
 Group:     Network/Daemons
 License:   ASL 2.0
@@ -159,6 +159,10 @@ chcon -R -t httpd_var_run_t %{consoledir}/httpd/run
 /sbin/restorecon -R -v /var/run
 /sbin/restorecon -rv %{gemdir}/passenger*
 %changelog
+* Thu Mar 21 2013 Brenton Leanhardt <bleanhar@redhat.com> 0.0.19-1
+- Bug 911455 - Unrestricted the session secret in Openshift Origin server
+  (bleanhar@redhat.com)
+
 * Tue Mar 05 2013 Chris Alfonso <calfonso@redhat.com> 0.0.18-1
 - BZ913376 - The favicon cannot be displayed (calfonso@redhat.com)
 
