@@ -16,7 +16,7 @@ end
 
 rails_secret = conf.get("SESSION_SECRET")
 if rails_secret.blank?
-  Rails.logger.error "\nERROR: Please configure SESSION_SECRET in #{conf_file}.  " +
+  Rails.logger.warn "\nWARNING: Please configure SESSION_SECRET in #{conf_file}.  " +
                      "Run oo-accept-broker for details."
 
   # We don't want to prevent an application from starting if this new setting
