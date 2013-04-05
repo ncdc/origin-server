@@ -1,6 +1,6 @@
 Summary:        M-Collective agent file for openshift-origin-msg-node-mcollective
 Name:           openshift-origin-msg-node-mcollective
-Version: 1.0.4
+Version: 1.0.5
 Release:        1%{?dist}
 Group:          Development/Languages
 License:        ASL 2.0
@@ -51,6 +51,10 @@ cp facts/update_yaml.rb %{buildroot}/usr/libexec/mcollective/
 
 
 %changelog
+* Fri Apr 05 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.0.5-1
+- Adding the ability to fetch all gears with broker auth tokens
+  (bleanhar@redhat.com)
+
 * Thu Jan 31 2013 Luke Meyer <lmeyer@redhat.com> 1.0.4-1
 - <facter,resource_limits> active_capacity/max_active_apps/etc switched to
   gear-based accounting (lmeyer@redhat.com)
