@@ -123,6 +123,7 @@ rm -rf %{buildroot}
 %{_libexecdir}/openshift/lib/setup_pam_fs_limits.sh
 %{_libexecdir}/openshift/lib/teardown_pam_fs_limits.sh
 %config(noreplace) %{_sysconfdir}/openshift/node.conf
+%config(noreplace) %{_sysconfdir}/openshift/resource_limits.conf
 %attr(0750,-,-) %{_sysconfdir}/httpd/conf.d/openshift
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/000001_openshift_origin_node.conf
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/000001_openshift_origin_node_servername.conf
@@ -147,12 +148,6 @@ rm -rf %{buildroot}
 
 %post
 echo "/usr/bin/oo-trap-user" >> /etc/shells
-
-# copying this file in the post hook so that this file can be replaced by rhc-node
-# copy this file only if it doesn't already exist
-if ! [ -f /etc/openshift/resource_limits.conf ]; then
-  cp -f /etc/openshift/resource_limits.template /etc/openshift/resource_limits.conf
-fi
 
 %changelog
 * Thu Mar 21 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.0.13-1
