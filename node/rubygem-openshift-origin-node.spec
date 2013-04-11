@@ -7,7 +7,7 @@
 
 Summary:        Cloud Development Node
 Name:           rubygem-%{gemname}
-Version:	1.0.13
+Version:	1.0.14
 Release:        1%{?dist}
 Group:          Development/Languages
 License:        ASL 2.0
@@ -150,6 +150,10 @@ rm -rf %{buildroot}
 echo "/usr/bin/oo-trap-user" >> /etc/shells
 
 %changelog
+* Thu Apr 11 2013 Luke Meyer <lmeyer@redhat.com> 1.0.14-1
+- <node spec> bug 949260 own resource_limits.conf in RPM #upstream
+  (lmeyer@redhat.com)
+
 * Thu Mar 21 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.0.13-1
 - Bug 924405 - Protect ssh key edits with a mutex and lock file. #upstream
   (rmillner@redhat.com)
