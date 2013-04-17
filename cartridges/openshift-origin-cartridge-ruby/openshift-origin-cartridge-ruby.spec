@@ -88,7 +88,6 @@ Requires:      %{?scl:%scl_prefix}rubygem-metaclass
 Requires:      %{?scl:%scl_prefix}rubygem-mime-types
 Requires:      %{?scl:%scl_prefix}rubygem-minitest
 Requires:      %{?scl:%scl_prefix}rubygem-mocha
-Requires:      %{?scl:%scl_prefix}rubygem-mongo
 Requires:      %{?scl:%scl_prefix}rubygem-multi_json
 Requires:      %{?scl:%scl_prefix}rubygem-open4
 Requires:      %{?scl:%scl_prefix}rubygem-passenger

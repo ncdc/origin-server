@@ -21,7 +21,6 @@ Requires:      rubygem-passenger-native
 Requires:      rubygem-passenger-native-libs
 Requires:      mod_passenger
 Requires:      rubygem-bundler
-Requires:      rubygem-mongo
 Requires:      rubygem-sqlite3
 Requires:      rubygem-thread-dump
 Requires:      ruby-sqlite3

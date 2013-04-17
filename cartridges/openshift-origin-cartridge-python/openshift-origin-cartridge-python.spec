@@ -15,8 +15,6 @@ Requires:      mod_wsgi >= 3.2
 Requires:      mod_wsgi < 3.4
 Requires:      httpd < 2.4
 Requires:      MySQL-python
-Requires:      pymongo
-Requires:      pymongo-gridfs
 Requires:      python-psycopg2
 Requires:      python-virtualenv
 Requires:      python-magic
