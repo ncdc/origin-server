@@ -15,7 +15,6 @@ Requires:      mod_perl
 Requires:      mod_bw
 Requires:      perl-DBD-SQLite
 Requires:      perl-DBD-MySQL
-Requires:      perl-MongoDB
 Requires:      ImageMagick-perl
 Requires:      gd-devel
 Requires:      perl-App-cpanminus
