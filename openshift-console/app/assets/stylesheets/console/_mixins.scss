@@ -1,0 +1,45 @@
+@mixin console_background {
+  background-image:
+    image-url('mts.png'),
+    -moz-repeating-linear-gradient(110deg, #1f1f1f 0px, #1e1e1e 10px, #1f1f1f 10px, #202020 20px);
+  background-image:
+    image-url('mts.png'),
+    -webkit-repeating-linear-gradient(110deg, #1f1f1f 0px, #1e1e1e 10px, #1f1f1f 10px, #202020 20px);
+  background-image:
+    image-url('mts.png'),
+    -ms-repeating-linear-gradient(110deg, #1f1f1f 0px, #1e1e1e 10px, #1f1f1f 10px, #202020 20px);
+  background-image:
+    image-url('mts.png'),
+    repeating-linear-gradient(160deg, #1f1f1f 0px, #1e1e1e 10px, #1f1f1f 10px, #202020 20px);
+  background-repeat:   repeat-x, repeat;
+  background-position: 297px 101%, center bottom;
+}
+
+@mixin console_background_ie9 {
+  background-image:    image-url('mts.png');
+  background-repeat:   repeat-x;
+  background-position: 297px 101%;
+}
+
+@mixin navbar_background {
+  background: black image-url("stars.png") left top repeat-x;
+}
+
+@mixin brand_image {
+  display: inline-block;
+  background: image-url('logo-24-inside.png') no-repeat left;
+  height: 32px;
+  width: 40px;
+  margin-top: -3px;
+  vertical-align: middle;
+}
+
+@mixin account_background {
+  background-color: transparent;
+  background-image: image-url('mts-bottom-transparent.png');
+  background-repeat: repeat-x;
+  //background-position: bottom 160px right 300px;
+  background-position: 100% 60%;
+  padding-bottom: 115px;
+}
+ 
