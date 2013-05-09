@@ -26,6 +26,7 @@ Requires:      %{?scl:%scl_prefix}rubygem-passenger
 Requires:      %{?scl:%scl_prefix}rubygem-passenger-native
 Requires:      %{?scl:%scl_prefix}rubygem-passenger-native-libs
 Requires:      %{?scl:%scl_prefix}mod_passenger
+Requires:      %{?scl:%scl_prefix}rubygem(minitest)
 
 %if 0%{?rhel}
 Requires:      %{?scl:%scl_prefix}rubygem-therubyracer

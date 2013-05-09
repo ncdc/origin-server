@@ -33,6 +33,7 @@ Requires:      %{?scl:%scl_prefix}rubygem(compass-rails)
 Requires:      %{?scl:%scl_prefix}rubygem(jquery-rails)
 Requires:      %{?scl:%scl_prefix}rubygem(sass-rails)
 Requires:      %{?scl:%scl_prefix}rubygem(uglifier)
+Requires:      %{?scl:%scl_prefix}rubygem(minitest)
 
 BuildRequires: %{?scl:%scl_prefix}build
 BuildRequires: scl-utils-build
