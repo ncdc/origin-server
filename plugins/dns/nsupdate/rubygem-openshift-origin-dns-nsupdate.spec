@@ -10,7 +10,7 @@
 Summary:       OpenShift plugin for DNS update service using nsupdate
 Name:          rubygem-%{gem_name}
 Version:       1.5.2
-Release:       1%{?dist}
+Release:       1.1%{?dist}
 Group:         Development/Languages
 License:       ASL 2.0
 URL:           http://www.openshift.com
@@ -89,6 +89,13 @@ cp %{buildroot}/%{gem_dir}/gems/%{gem_name}-%{version}/conf/openshift-origin-dns
 
 
 %changelog
+* Wed Jun 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.5.2-1.1
+- Fixing syntax error in the nsupdate plugin (bleanhar@redhat.com)
+- added alternate TSIG key algorithms (mlamouri@redhat.com)
+- Combine changes for BZ955602 and BZ655643 (dns-nsupdate config and
+  exceptions) (mlamouri@redhat.com)
+- Bug 928675 (asari.ruby@gmail.com)
+
 * Sat Apr 13 2013 Krishna Raman <kraman@gmail.com> 1.5.2-1
 - Fixing broker and nsupdate plugin deps (bleanhar@redhat.com)
 - The nsupdate plugin was calling a method that didn't exist (kraman@gmail.com)
