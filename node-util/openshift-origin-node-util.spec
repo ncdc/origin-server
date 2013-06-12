@@ -1,7 +1,7 @@
 Summary:       Utility scripts for the OpenShift Origin broker
 Name:          openshift-origin-node-util
 Version: 1.9.9
-Release:       1%{?dist}
+Release:       1.1%{?dist}
 Group:         Network/Daemons
 License:       ASL 2.0
 URL:           http://www.openshift.com
@@ -123,6 +123,13 @@ mv services/openshift-gears.service %{buildroot}/etc/systemd/system/openshift-ge
 /sbin/restorecon /usr/sbin/oo-restorer* || :
 
 %changelog
+* Wed Jun 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.9.9-1.1
+- Bug 971356: The symbolic link for the old cartridge was confusing the
+  websocket test. (rmillner@redhat.com)
+- Post v2 migration issues - some legacy DNS variables had capitals in them.
+  (rmillner@redhat.com)
+- Add mindepth/maxdepth for finding manifest file. (mrunalp@gmail.com)
+
 * Sat Jun 01 2013 Dan McPherson <dmcphers@redhat.com> 1.9.9-1
 - Bug 969228 - Check selinux node set with oo-accept-node.
   (rmillner@redhat.com)
