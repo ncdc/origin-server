@@ -17,7 +17,7 @@
 Summary:       Cloud Development Node
 Name:          rubygem-%{gem_name}
 Version: 1.9.12
-Release:       1%{?dist}
+Release:       1.1%{?dist}
 Group:         Development/Languages
 License:       ASL 2.0
 URL:           http://www.openshift.com
@@ -298,6 +298,27 @@ fi
 %attr(0755,-,-) /etc/cron.monthly/openshift-origin-cron-monthly
 
 %changelog
+* Wed Jun 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.9.12-1.1
+- Add CartridgeRepository.latest_versions for use in rhc cartridge list
+  (pmorie@gmail.com)
+- Fix test case (dmcphers@redhat.com)
+- WIP Cartridge Refactor - Fixed test method names (jhonce@redhat.com)
+- Bug 971460 - Refactor path_append/prepend to accept multiple elements
+  (jhonce@redhat.com)
+- Sort by cartridge version in cartridge_repository (pmorie@gmail.com)
+- rm -f .erb files after processing (pmorie@gmail.com)
+- Skip symlinks in V1 cart model each_cartridge (pmorie@gmail.com)
+- Merge pull request #70 from brenton/BZ971351
+  (dmcphers+openshiftbot@redhat.com)
+- Fix bug 969828, 971350 (pmorie@gmail.com)
+- Bug 969937, 971351: Implement gear script deploy method
+  (ironcladlou@gmail.com)
+- <node tests> - Update shell_exec_func_test to create homedir in /var/tmp
+  (jdetiber@redhat.com)
+- We don't want test dependencies required at runtime (bleanhar@redhat.com)
+- Bug 970792 - The SSLVerifyClient stanza causes browser popups.
+  (rmillner@redhat.com)
+
 * Mon Jun 03 2013 Adam Miller <admiller@redhat.com> 1.9.12-1
 - Fix bug 969605 (pmorie@gmail.com)
 - Fix bug 969605 (pmorie@gmail.com)
