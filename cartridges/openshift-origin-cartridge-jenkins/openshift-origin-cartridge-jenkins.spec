@@ -3,7 +3,7 @@
 Summary:       Provides jenkins-1.4 support
 Name:          openshift-origin-cartridge-jenkins
 Version:       1.9.7
-Release:       1%{?dist}
+Release:       1.1%{?dist}
 Group:         Development/Languages
 License:       ASL 2.0
 URL:           http://www.openshift.com
@@ -43,6 +43,9 @@ chkconfig jenkins off
 %doc %{cartridgedir}/LICENSE
 
 %changelog
+* Wed Jun 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.9.7-1.1
+- Release bump
+
 * Sat Jun 01 2013 Dan McPherson <dmcphers@redhat.com> 1.9.7-1
 - Make Install-Build-Required default to false (ironcladlou@gmail.com)
 
