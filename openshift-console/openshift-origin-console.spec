@@ -16,7 +16,7 @@
 Summary:       The OpenShift Management Console
 Name:          openshift-origin-console
 Version:       1.5.18
-Release:       1%{?dist}
+Release:       1.1%{?dist}
 Group:         Network/Daemons
 License:       ASL 2.0
 URL:           http://www.openshift.com
@@ -238,6 +238,30 @@ _EOF
 /sbin/fixfiles -R %{?scl:%scl_prefix}mod_passenger restore
 /sbin/restorecon -R -v /var/run
 %changelog
+* Wed Jun 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.5.18-1.1
+- Bug 960449 - ruby193-rubygem-minitest console dependency
+  (bleanhar@redhat.com)
+- <openshift-console> Bug 960855 - Fix bugzilla link for Enterprise
+  (jdetiber@redhat.com)
+- We don't want test dependencies required at runtime (bleanhar@redhat.com)
+- Bug 956592 - Rebranding for Enterprise post rebase (jdetiber@redhat.com)
+- <openshift-console> - Run restorecon on ${consoledir} in %%post
+  (jdetiber@redhat.com)
+- <openshift-console> Bug 961888 - Fix SELinux context for httpd run dir
+  (jdetiber@redhat.com)
+- <console> Bug 959162 - Fix display issues (jdetiber@redhat.com)
+- <openshift-console> - Bug 957818 Update boot.rb to default to production env
+  (jdetiber@redhat.com)
+- Bug 956625 - Cleanup some BuildRequires that were added for this bug
+  (jdetiber@redhat.com)
+- Bug 956625 - Updating to precompile the origin console assets during RPM
+  build (jdetiber@redhat.com)
+- Bug 956561 - No available console log file generated. (bleanhar@redhat.com)
+- Fix find/delete command for openshift-console and console packages. Bug
+  888714. (kraman@gmail.com)
+- Bug 888714 - Remove .gitkeep and .gitignore (ccoleman@redhat.com)
+- Bug 928675 (asari.ruby@gmail.com)
+
 * Sat Apr 13 2013 Krishna Raman <kraman@gmail.com> 1.5.18-1
 - Add a few base URLs and helpers for fetching assets during static page
   compilation (ccoleman@redhat.com)
