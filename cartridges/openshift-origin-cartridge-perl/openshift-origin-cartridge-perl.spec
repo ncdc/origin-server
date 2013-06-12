@@ -2,7 +2,7 @@
 
 Name:          openshift-origin-cartridge-perl
 Version:       0.4.7
-Release:       1%{?dist}
+Release:       1.1%{?dist}
 Summary:       Perl cartridge
 Group:         Development/Languages
 License:       ASL 2.0
@@ -53,6 +53,9 @@ Perl cartridge for OpenShift. (Cartridge Format V2)
 
 
 %changelog
+* Wed Jun 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 0.4.7-1.1
+- Removing MongoDB cartridge deps (bleanhar@redhat.com)
+
 * Sat Jun 01 2013 Dan McPherson <dmcphers@redhat.com> 0.4.7-1
 - Merge pull request #2719 from mrunalp/bugs/carts_stop
   (dmcphers+openshiftbot@redhat.com)
