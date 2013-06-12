@@ -3,7 +3,7 @@
 Summary:       Mock cartridge for V2 Cartridge SDK
 Name:          openshift-origin-cartridge-mock
 Version:       0.4.7
-Release:       1%{?dist}
+Release:       1.1%{?dist}
 Group:         Development/Languages
 License:       ASL 2.0
 URL:           https://www.openshift.com
@@ -40,6 +40,9 @@ test platform functionality. (Cartridge Format V2)
 %doc %{cartridgedir}/LICENSE
 
 %changelog
+* Wed Jun 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 0.4.7-1.1
+- Release bump
+
 * Tue May 28 2013 Adam Miller <admiller@redhat.com> 0.4.7-1
 - Replace pre-receive cart control action with pre-repo-archive
   (ironcladlou@gmail.com)
