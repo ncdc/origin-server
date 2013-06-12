@@ -10,7 +10,7 @@
 Summary:       Cloud Development Controller
 Name:          rubygem-%{gem_name}
 Version: 1.9.12
-Release:       1%{?dist}
+Release:       1.1%{?dist}
 Group:         Development/Languages
 License:       ASL 2.0
 URL:           http://www.openshift.com
@@ -84,6 +84,10 @@ mkdir -p %{buildroot}/etc/openshift/
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Wed Jun 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.9.12-1.1
+- fix bz971876 - ci cleanup on app delete (rchopra@redhat.com)
+- delete downloaded cartridge when component is deleted (rchopra@redhat.com)
+
 * Mon Jun 03 2013 Adam Miller <admiller@redhat.com> 1.9.12-1
 - fix for bz970008 (rchopra@redhat.com)
 - fix bz969724 - feature name is now just cartridge name (rchopra@redhat.com)
