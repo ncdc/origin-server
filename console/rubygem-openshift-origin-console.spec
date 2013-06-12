@@ -9,8 +9,8 @@
 
 Summary:       OpenShift Origin Management Console
 Name:          rubygem-%{gem_name}
-Version: 1.9.11
-Release:       1%{?dist}
+Version: 1.9.12
+Release:       1.1%{?dist}
 Group:         Development/Languages
 License:       ASL 2.0
 URL:           https://openshift.redhat.com
@@ -146,6 +146,24 @@ cp -a ./%{gem_dir}/* %{buildroot}%{gem_dir}/
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Wed Jun 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.9.12-1.1
+- More BuildRequires for the console gem (bleanhar@redhat.com)
+- Sorting the console ruby BuildRequires (bleanhar@redhat.com)
+- the jquery-rails gem is required at build time for the console rubygem
+  (bleanhar@redhat.com)
+- Bug 960449 - ruby193-rubygem-minitest console dependency
+  (bleanhar@redhat.com)
+- We don't want test dependencies required at runtime (bleanhar@redhat.com)
+
+* Wed Jun 12 2013 Brenton Leanhardt <bleanhar@redhat.com>
+- More BuildRequires for the console gem (bleanhar@redhat.com)
+- Sorting the console ruby BuildRequires (bleanhar@redhat.com)
+- the jquery-rails gem is required at build time for the console rubygem
+  (bleanhar@redhat.com)
+- Bug 960449 - ruby193-rubygem-minitest console dependency
+  (bleanhar@redhat.com)
+- We don't want test dependencies required at runtime (bleanhar@redhat.com)
+
 * Sat Jun 01 2013 Dan McPherson <dmcphers@redhat.com> 1.9.11-1
 - Fixes Bug 967504 and Bug 969536 - increased timeout to properly handle some
   quickstarts (ffranz@redhat.com)
