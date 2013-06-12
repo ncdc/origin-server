@@ -8,7 +8,7 @@
 Summary:       Provides embedded PostgreSQL support
 Name:          openshift-origin-cartridge-postgresql
 Version:       0.2.7
-Release:       1%{?dist}
+Release:       1.1%{?dist}
 Group:         Network/Daemons
 License:       ASL 2.0
 URL:           http://www.openshift.com
@@ -69,6 +69,9 @@ Provides PostgreSQL cartridge support to OpenShift. (Cartridge Format V2)
 
 
 %changelog
+* Wed Jun 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 0.2.7-1.1
+- We will not support gdal for Enterprise. (bleanhar@redhat.com)
+
 * Tue May 28 2013 Adam Miller <admiller@redhat.com> 0.2.7-1
 - Bug 962657: Return db info to client during postgres install
   (ironcladlou@gmail.com)
