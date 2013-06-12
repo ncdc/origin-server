@@ -3,7 +3,7 @@
 Summary:       Provides embedded mysql support
 Name:          openshift-origin-cartridge-mysql
 Version:       0.3.6
-Release:       1%{?dist}
+Release:       1.1%{?dist}
 Group:         Network/Daemons
 License:       ASL 2.0
 URL:           http://www.openshift.com
@@ -40,6 +40,9 @@ Provides mysql cartridge support to OpenShift. (Cartridge Format V2)
 %doc %{cartridgedir}/LICENSE
 
 %changelog
+* Wed Jun 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 0.3.6-1.1
+- Bug 928029 - phpmyadmin does not ship with OSE (bleanhar@redhat.com)
+
 * Fri May 24 2013 Adam Miller <admiller@redhat.com> 0.3.6-1
 - Bug 967017: Use underscores for v2 cart script names (ironcladlou@gmail.com)
 - remove install build required for non buildable carts (dmcphers@redhat.com)
