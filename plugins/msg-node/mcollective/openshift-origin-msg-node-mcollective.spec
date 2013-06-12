@@ -11,7 +11,7 @@
 Summary:       M-Collective agent file for openshift-origin-msg-node-mcollective
 Name:          openshift-origin-msg-node-mcollective
 Version: 1.9.3
-Release:       1%{?dist}
+Release:       1.1%{?dist}
 Group:         Development/Languages
 License:       ASL 2.0
 URL:           http://www.openshift.com
@@ -51,6 +51,10 @@ cp -p facts/update_yaml.rb %{buildroot}/usr/libexec/mcollective/
 %attr(0700,-,-) %config(noreplace) /etc/cron.minutely/openshift-facts
 
 %changelog
+* Wed Jun 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.9.3-1.1
+- Change working directory to GEAR_BASE_DIR for openshift mcol agent
+  (pmorie@gmail.com)
+
 * Fri May 24 2013 Adam Miller <admiller@redhat.com> 1.9.3-1
 - Bug 965317 - Add way to patch File class so all files have sync enabled.
   (rmillner@redhat.com)
