@@ -2,7 +2,7 @@
 
 Name:          openshift-origin-cartridge-php
 Version:       0.4.9
-Release:       1%{?dist}
+Release:       1.1%{?dist}
 Summary:       Php cartridge
 Group:         Development/Languages
 License:       ASL 2.0
@@ -79,6 +79,11 @@ sed -i 's/#DefaultRuntimeDir/DefaultRuntimeDir/g' %{buildroot}%{cartridgedir}/ve
 %doc %{cartridgedir}/LICENSE
 
 %changelog
+* Wed Jun 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 0.4.9-1.1
+- PHP configuration fixes. (mrunalp@gmail.com)
+- Eliminate noisy output from php control script (ironcladlou@gmail.com)
+- Removing MongoDB cartridge deps (bleanhar@redhat.com)
+
 * Sat Jun 01 2013 Dan McPherson <dmcphers@redhat.com> 0.4.9-1
 - Merge pull request #2719 from mrunalp/bugs/carts_stop
   (dmcphers+openshiftbot@redhat.com)
