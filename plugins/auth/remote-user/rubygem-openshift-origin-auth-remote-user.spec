@@ -12,7 +12,7 @@
 Summary:       OpenShift plugin for remote-user authentication
 Name:          rubygem-%{gem_name}
 Version: 1.8.1
-Release:       1%{?dist}
+Release:       1.1%{?dist}
 Group:         Development/Languages
 License:       ASL 2.0
 URL:           http://www.openshift.com
@@ -99,6 +99,9 @@ then
 fi
 
 %changelog
+* Wed Jun 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.8.1-1.1
+- Bumping release
+
 * Thu Apr 25 2013 Adam Miller <admiller@redhat.com> 1.8.1-1
 - Merge pull request #1858 from mscherer/fix/gem_spec/auth_remote
   (dmcphers+openshiftbot@redhat.com)
