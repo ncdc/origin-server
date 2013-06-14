@@ -129,14 +129,12 @@ rollcfg() {
 
 
 lockwrap() {
-    exec 200>${lockfile} 201>${reloadlock}
-
-    flock 200
-    oldsum=$( md5sum $cfgfile | awk '{ print $1 }' )
+    ( flock 200;
+    ( oldsum=$( md5sum $cfgfile | awk '{ print $1 }' )
     "$@"
     retcode=$?
-    newsum=$( md5sum $cfgfile | awk '{ print $1 }' )
-    flock -u 200
+    newsum=$( md5sum $cfgfile | awk '{ print $1 }' ) ) 200>&- ;
+    flock -u 200 ) 200>${lockfile}
 
     if [ $retcode != 0 ]; then
         echo "Error: Failed to update proxy."
@@ -146,9 +144,9 @@ lockwrap() {
     if [ $oldsum != $newsum ]; then
         [ -e $reqdir ] || mkdir -m 750 $reqdir
         reqfile=$(mktemp ${reqprefix}.XXXXXX)
-        flock 201
+        ( flock 201;
 
-        reloadreq=()
+        (reloadreq=()
         reloadit=""
         for f in ${reqprefix}.??????
         do
@@ -172,8 +170,8 @@ lockwrap() {
         fi
 
         retcode=$(cat "$reqfile")
-        rm -f $reqfile
-        flock -u 201
+        rm -f $reqfile ) 201>&- ;
+        flock -u 201 ) 201>${reloadlock}
     fi
 
     return $retcode
