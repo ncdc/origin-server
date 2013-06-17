@@ -9,7 +9,7 @@
 
 Summary:       Cloud Development Controller
 Name:          rubygem-%{gem_name}
-Version: 1.9.12
+Version: 1.9.13
 Release:       1.1%{?dist}
 Group:         Development/Languages
 License:       ASL 2.0
@@ -84,6 +84,11 @@ mkdir -p %{buildroot}/etc/openshift/
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Mon Jun 17 2013 Chris Alfonso <calfonso@redhat.com> 1.9.13-1.1
+- Bug 973718 (lnader@redhat.com)
+- <app model> bug 971355 ssh_url should use gear.name for secondary gears
+  (lmeyer@redhat.com)
+
 * Wed Jun 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.9.12-1.1
 - fix bz971876 - ci cleanup on app delete (rchopra@redhat.com)
 - delete downloaded cartridge when component is deleted (rchopra@redhat.com)
