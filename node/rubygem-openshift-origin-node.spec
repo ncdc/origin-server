@@ -16,7 +16,7 @@
 
 Summary:       Cloud Development Node
 Name:          rubygem-%{gem_name}
-Version: 1.9.12
+Version: 1.9.13
 Release:       1.1%{?dist}
 Group:         Development/Languages
 License:       ASL 2.0
@@ -298,6 +298,10 @@ fi
 %attr(0755,-,-) /etc/cron.monthly/openshift-origin-cron-monthly
 
 %changelog
+* Mon Jun 17 2013 Chris Alfonso <calfonso@redhat.com> 1.9.13-1.1
+- Make sure we call the hooks on the correct cartridge by reading ident from
+  the cartridge_dir (mrunalp@gmail.com)
+
 * Wed Jun 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.9.12-1.1
 - Add CartridgeRepository.latest_versions for use in rhc cartridge list
   (pmorie@gmail.com)
