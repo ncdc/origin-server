@@ -1,9 +1,17 @@
 #!/bin/bash -eu
 
+# cpanm depends on $HOME being set appropriately:
+set +u
+if [ -z "${HOME}" ]
+then
+    export HOME=${OPENSHIFT_HOMEDIR}
+fi
+set -u
+
 if [ -f ${OPENSHIFT_REPO_DIR}.openshift/markers/force_clean_build ]
 then
     echo ".openshift/markers/force_clean_build found!  Rebuilding perl modules" 1>&2
-    rm -rf  ${OPENSHIFT_PERL_DIR}/perl5lib/* ~/.cpanm/*
+    rm -rf  ${OPENSHIFT_PERL_DIR}/perl5lib/* ${OPENSHIFT_HOMEDIR}/.cpanm/*
 fi
 
 LINUX_DISTRO=$(</etc/redhat-release)
