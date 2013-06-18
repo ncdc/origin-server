@@ -9,7 +9,7 @@
 
 Summary:       Cloud Development Controller
 Name:          rubygem-%{gem_name}
-Version: 1.9.13
+Version: 1.9.14
 Release:       1.1%{?dist}
 Group:         Development/Languages
 License:       ASL 2.0
@@ -84,6 +84,10 @@ mkdir -p %{buildroot}/etc/openshift/
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Tue Jun 18 2013 Luke Meyer <lmeyer@redhat.com> 1.9.14-1.1
+- <controller> fix bug 975370 - jenkins breaks app listing
+  (dmcphers@redhat.com)
+
 * Mon Jun 17 2013 Chris Alfonso <calfonso@redhat.com> 1.9.13-1.1
 - Bug 973718 (lnader@redhat.com)
 - <app model> bug 971355 ssh_url should use gear.name for secondary gears
