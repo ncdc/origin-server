@@ -17,7 +17,7 @@
 Summary:       Cloud Development Node
 Name:          rubygem-%{gem_name}
 Version: 1.9.13
-Release:       1.1%{?dist}
+Release:       1.2%{?dist}
 Group:         Development/Languages
 License:       ASL 2.0
 URL:           http://www.openshift.com
@@ -299,6 +299,10 @@ fi
 %attr(0755,-,-) /etc/cron.monthly/openshift-origin-cron-monthly
 
 %changelog
+* Thu Jun 20 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.9.13-1.2
+- Bug 976173 - oo-* scripts fail on node with ruby LoadError
+  (bleanhar@redhat.com)
+
 * Mon Jun 17 2013 Chris Alfonso <calfonso@redhat.com> 1.9.13-1.1
 - Make sure we call the hooks on the correct cartridge by reading ident from
   the cartridge_dir (mrunalp@gmail.com)
