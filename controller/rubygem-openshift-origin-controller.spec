@@ -10,7 +10,7 @@
 Summary:       Cloud Development Controller
 Name:          rubygem-%{gem_name}
 Version: 1.9.14
-Release:       1.1%{?dist}
+Release:       1.2%{?dist}
 Group:         Development/Languages
 License:       ASL 2.0
 URL:           http://www.openshift.com
