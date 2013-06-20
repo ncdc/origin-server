@@ -11,7 +11,7 @@ class ApplicationTypesController < ConsoleController
       ['PHP', :php],
       ['Ruby', :ruby],
       ['Python', :python],
-      ['Node.js', :nodejs],
+      #['Node.js', :nodejs],
       ['Perl', :perl],
       nil,
       ['All web cartridges', :cartridge],
