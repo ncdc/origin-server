@@ -31,6 +31,7 @@ Requires:      %{?scl:%scl_prefix}rubygem(commander)
 Requires:      %{?scl:%scl_prefix}rubygem(json)
 Requires:      %{?scl:%scl_prefix}rubygem(parseconfig)
 Requires:      %{?scl:%scl_prefix}rubygem(safe_yaml)
+Requires:      %{?scl:%scl_prefix}rubygem(rest-client)
 Requires:      %{?scl:%scl_prefix}rubygems
 Requires:      %{?scl:%scl_prefix}ruby(selinux)
 Requires:      cronie
