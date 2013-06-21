@@ -1,8 +1,8 @@
 %global cartridgedir %{_libexecdir}/openshift/cartridges/v2/perl
 
 Name:          openshift-origin-cartridge-perl
-Version:       0.4.7
-Release:       1.1%{?dist}
+Version:       0.4.8
+Release:       1%{?dist}
 Summary:       Perl cartridge
 Group:         Development/Languages
 License:       ASL 2.0
@@ -53,6 +53,10 @@ Perl cartridge for OpenShift. (Cartridge Format V2)
 
 
 %changelog
+* Thu Jun 20 2013 Jason DeTiberus <jdetiber@redhat.com> 0.4.8-1
+- <perl/bin/build> Bug 971403 - Tweak build script to account for unset HOME
+  variable (jolamb@redhat.com)
+
 * Wed Jun 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 0.4.7-1.1
 - Removing MongoDB cartridge deps (bleanhar@redhat.com)
 

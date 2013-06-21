@@ -7,7 +7,7 @@
 
 Summary:       Provides embedded haproxy-1.4 support
 Name:          openshift-origin-cartridge-haproxy-1.4
-Version: 1.9.3
+Version: 1.9.4
 Release:       1%{?dist}
 Group:         Network/Daemons
 License:       ASL 2.0
@@ -86,6 +86,10 @@ ln -s %{cartridgedir}/../../abstract/info/hooks/system-messages %{buildroot}%{ca
 
 
 %changelog
+* Thu Jun 20 2013 Jason DeTiberus <jdetiber@redhat.com> 1.9.4-1
+- Remove avc denial messages for v1 haproxy gear creation - Related to
+  bz973984, but this is the v1 cartridge format version. (calfonso@redhat.com)
+
 * Mon May 20 2013 Dan McPherson <dmcphers@redhat.com> 1.9.3-1
 - cleanup (dmcphers@redhat.com)
 

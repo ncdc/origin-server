@@ -9,7 +9,7 @@
 
 Summary:       Cloud Development Common
 Name:          rubygem-%{gem_name}
-Version: 1.8.9
+Version: 1.8.10
 Release:       1.1%{?dist}
 Group:         Development/Languages
 License:       ASL 2.0
@@ -24,6 +24,7 @@ Requires:      %{?scl:%scl_prefix}rubygems
 Requires:      %{?scl:%scl_prefix}rubygem(activemodel)
 Requires:      %{?scl:%scl_prefix}rubygem(json)
 Requires:      %{?scl:%scl_prefix}rubygem(safe_yaml)
+Requires:      %{?scl:%scl_prefix}rubygem(bundler)
 %if 0%{?rhel}
 Requires:      openshift-origin-util-scl
 %endif
@@ -105,6 +106,9 @@ cp bin/man/*.8 %{buildroot}%{_root_mandir}/man8/
 %doc %{gem_docdir}
 
 %changelog
+* Thu Jun 20 2013 Luke Meyer <lmeyer@redhat.com> 1.8.10-1.1
+- <common> bug 976173 oo-diagnostics requires bundler (lmeyer@redhat.com)
+
 * Wed Jun 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.8.9-1.1
 - <oo-diagnostics> Bug 970805 - Add check for broker SSL cert
   (jdetiber@redhat.com)
