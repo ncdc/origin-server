@@ -9,8 +9,8 @@
 
 Summary:       Cloud Development Common
 Name:          rubygem-%{gem_name}
-Version: 1.8.10
-Release:       1.1%{?dist}
+Version: 1.8.11
+Release:       1%{?dist}
 Group:         Development/Languages
 License:       ASL 2.0
 URL:           http://www.openshift.com
@@ -106,6 +106,10 @@ cp bin/man/*.8 %{buildroot}%{_root_mandir}/man8/
 %doc %{gem_docdir}
 
 %changelog
+* Fri Jun 21 2013 Jason DeTiberus <jdetiber@redhat.com> 1.8.11-1
+- <oo-diagnostics> Bug 976874 - Detect abrt-addon-python conflicts
+  (jdetiber@redhat.com)
+
 * Thu Jun 20 2013 Luke Meyer <lmeyer@redhat.com> 1.8.10-1.1
 - <common> bug 976173 oo-diagnostics requires bundler (lmeyer@redhat.com)
 
