@@ -2,8 +2,8 @@
 
 Summary:       Provides embedded mysql support
 Name:          openshift-origin-cartridge-mysql
-Version:       0.3.6
-Release:       1.1%{?dist}
+Version:       0.3.7
+Release:       1%{?dist}
 Group:         Network/Daemons
 License:       ASL 2.0
 URL:           http://www.openshift.com
@@ -40,6 +40,9 @@ Provides mysql cartridge support to OpenShift. (Cartridge Format V2)
 %doc %{cartridgedir}/LICENSE
 
 %changelog
+* Wed Jun 26 2013 Jason DeTiberus <jdetiber@redhat.com> 0.3.7-1
+- Bug 970914 - Mysql big data snapshot restore failed (fotios@redhat.com)
+
 * Wed Jun 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 0.3.6-1.1
 - Bug 928029 - phpmyadmin does not ship with OSE (bleanhar@redhat.com)
 
