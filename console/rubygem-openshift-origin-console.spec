@@ -9,8 +9,8 @@
 
 Summary:       OpenShift Origin Management Console
 Name:          rubygem-%{gem_name}
-Version: 1.9.12
-Release:       1.1%{?dist}
+Version: 1.9.14
+Release:       1%{?dist}
 Group:         Development/Languages
 License:       ASL 2.0
 URL:           https://openshift.redhat.com
@@ -146,6 +146,17 @@ cp -a ./%{gem_dir}/* %{buildroot}%{gem_dir}/
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Wed Jun 26 2013 Jason DeTiberus <jdetiber@redhat.com> 1.9.14-1
+- <console> Bug 978248 - Remove mongodb link for Getting Started page
+  (jdetiber@redhat.com)
+- <Console> Bug 976218 - Remove nodejs from tag list (jdetiber@redhat.com)
+
+* Thu Jun 20 2013 Jason DeTiberus <jdetiber@redhat.com> 1.9.13-1.1
+- <Console> Bug 976218 - Remove nodejs from tag list (jdetiber@redhat.com)
+
+* Thu Jun 20 2013 Jason DeTiberus <jdetiber@redhat.com>
+- <Console> Bug 976218 - Remove nodejs from tag list (jdetiber@redhat.com)
+
 * Wed Jun 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.9.12-1.1
 - More BuildRequires for the console gem (bleanhar@redhat.com)
 - Sorting the console ruby BuildRequires (bleanhar@redhat.com)
