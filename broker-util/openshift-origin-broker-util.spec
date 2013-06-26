@@ -7,7 +7,7 @@
 Summary:       Utility scripts for the OpenShift Origin broker
 Name:          openshift-origin-broker-util
 Version: 1.9.7
-Release:       1.1%{?dist}
+Release:       1.2%{?dist}
 Group:         Network/Daemons
 License:       ASL 2.0
 URL:           http://www.openshift.com
@@ -86,6 +86,9 @@ cp man/*.8 %{buildroot}%{_mandir}/man8/
 %{_mandir}/man8/oo-stats.8.gz
 
 %changelog
+* Wed Jun 26 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.9.7-1.2
+- With BIND_KRB_*, nsupdate -g needs to be used. (jpazdziora@redhat.com)
+
 * Wed Jun 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.9.7-1.1
 - <broker-util> Bug 972308 - Update permissions check for user_action.log
   (jdetiber@redhat.com)
