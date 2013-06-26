@@ -6,7 +6,7 @@
 
 Summary:       Script to configure HAProxy to do port forwarding for OpenShift
 Name:          openshift-origin-port-proxy
-Version: 1.6.3
+Version: 1.6.4
 Release:       1%{?dist}
 License:       ASL 2.0
 URL:           http://www.openshift.com
@@ -85,6 +85,11 @@ fi
 %config(noreplace) %{_sysconfdir}/openshift/port-proxy.cfg
 
 %changelog
+* Wed Jun 26 2013 Jason DeTiberus <jdetiber@redhat.com> 1.6.4-1
+- <openshift-port-proxy-cfg> Bug 978309 - pick up more recent version of script
+  to fix variable scoping bug - origin-server @
+  207c4676ae97061860ad4315d2c65df1b062047f (jolamb@redhat.com)
+
 * Thu Jun 20 2013 Jason DeTiberus <jdetiber@redhat.com> 1.6.3-1
 - Remove avc denial messages for v1 haproxy gear creation - Related to
   bz973984, but this is the v1 cartridge format version. (calfonso@redhat.com)
