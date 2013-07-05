@@ -77,8 +77,10 @@ This includes the configuration necessary to run the console with mod_passenger.
 
 %if 0%{?fedora} >= 18
 mv Gemfile.fedora Gemfile
+rm Gemfile.rhel
 %else
 mv Gemfile.rhel Gemfile
+rm Gemfile.fedora
 %endif
 
 set -e
