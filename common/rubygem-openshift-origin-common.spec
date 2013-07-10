@@ -9,7 +9,7 @@
 
 Summary:       Cloud Development Common
 Name:          rubygem-%{gem_name}
-Version: 1.8.11
+Version: 1.8.12
 Release:       1%{?dist}
 Group:         Development/Languages
 License:       ASL 2.0
@@ -106,6 +106,11 @@ cp bin/man/*.8 %{buildroot}%{_root_mandir}/man8/
 %doc %{gem_docdir}
 
 %changelog
+* Wed Jul 10 2013 Chris Alfonso <calfonso@redhat.com> 1.8.12-1
+- Add ssl_to_gear option. (mrunalp@gmail.com)
+- origin_runtime_138 - Add SSL_ENDPOINT variable and filter whether carts use
+  ssl_to_gear. (rmillner@redhat.com)
+
 * Fri Jun 21 2013 Jason DeTiberus <jdetiber@redhat.com> 1.8.11-1
 - <oo-diagnostics> Bug 976874 - Detect abrt-addon-python conflicts
   (jdetiber@redhat.com)
