@@ -9,8 +9,8 @@
 
 Summary:       Cloud Development Controller
 Name:          rubygem-%{gem_name}
-Version: 1.9.14
-Release:       1.2%{?dist}
+Version: 1.9.15
+Release:       1.1%{?dist}
 Group:         Development/Languages
 License:       ASL 2.0
 URL:           http://www.openshift.com
@@ -84,6 +84,11 @@ mkdir -p %{buildroot}/etc/openshift/
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Wed Jul 10 2013 Chris Alfonso <calfonso@redhat.com> 1.9.15-1.1
+- Add ssl_to_gear option. (mrunalp@gmail.com)
+- origin_runtime_138 - Add SSL_ENDPOINT variable and filter whether carts use
+  ssl_to_gear. (rmillner@redhat.com)
+
 * Tue Jun 18 2013 Luke Meyer <lmeyer@redhat.com> 1.9.14-1.1
 - <controller> fix bug 975370 - jenkins breaks app listing
   (dmcphers@redhat.com)
