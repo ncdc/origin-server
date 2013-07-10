@@ -1,6 +1,6 @@
 Summary:       Openshift PAM module
 Name:          pam_openshift
-Version: 1.6.1
+Version: 1.6.2
 Release:       1.1%{?dist}
 Group:         System Environment/Base
 License:       GPLv2
@@ -38,6 +38,10 @@ install -D -m 755 oo-namespace-init %{buildroot}/%{_sbindir}/oo-namespace-init
 %attr(0755,root,root) %{_sbindir}/oo-namespace-init
 
 %changelog
+* Wed Jul 10 2013 Chris Alfonso <calfonso@redhat.com> 1.6.2-1.1
+- If the home directory entry is empty, then its not a valid OpenShift user.
+  (rmillner@redhat.com)
+
 * Wed Jun 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.6.1-1.1
 - Release bump
 
