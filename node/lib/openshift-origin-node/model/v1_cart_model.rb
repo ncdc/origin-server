@@ -278,7 +278,7 @@ module OpenShift
       stdin.close
       output = ""
       begin
-        Timeout::timeout(120) do
+        Timeout::timeout(3600) do
           while (line = stdout.gets)
             output << line
           end
