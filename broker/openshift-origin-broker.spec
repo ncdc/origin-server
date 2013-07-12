@@ -16,7 +16,7 @@
 
 Summary:       OpenShift Origin broker components
 Name:          openshift-origin-broker
-Version:       1.5.3
+Version:       1.5.4
 Release:       1%{?dist}
 Group:         Network/Daemons
 License:       ASL 2.0
@@ -224,6 +224,10 @@ chcon -R -t httpd_var_run_t %{brokerdir}/httpd/run
 /sbin/restorecon -R -v /var/run
 
 %changelog
+* Fri Jul 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.5.4-1
+- Bug 973796 - PassengerPreStart points at root which logs errors
+  (bleanhar@redhat.com)
+
 * Wed Jul 10 2013 Chris Alfonso <calfonso@redhat.com> 1.5.3-1
 - origin_runtime_138 - Add SSL_ENDPOINT variable and filter whether carts use
   ssl_to_gear. (rmillner@redhat.com)
