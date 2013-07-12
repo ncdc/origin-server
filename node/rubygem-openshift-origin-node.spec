@@ -17,7 +17,7 @@
 Summary:       Cloud Development Node
 Name:          rubygem-%{gem_name}
 Version: 1.9.14
-Release:       1.1%{?dist}
+Release:       1.2%{?dist}
 Group:         Development/Languages
 License:       ASL 2.0
 URL:           http://www.openshift.com
@@ -304,6 +304,12 @@ fi
 %attr(0755,-,-) /etc/cron.monthly/openshift-origin-cron-monthly
 
 %changelog
+* Fri Jul 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.9.14-1.2
+- Increase v1 cart model timeout from 120s to 3600s (calfonso@redhat.com)
+- Bug 981249 - rubygem-openshift-origin-node was missing open4 dependency
+  (bleanhar@redhat.com)
+- Adding lsof dependency (kraman@gmail.com)
+
 * Wed Jul 10 2013 Chris Alfonso <calfonso@redhat.com> 1.9.14-1.1
 - Add ssl_to_gear option. (mrunalp@gmail.com)
 
