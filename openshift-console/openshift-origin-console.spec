@@ -15,7 +15,7 @@
 
 Summary:       The OpenShift Management Console
 Name:          openshift-origin-console
-Version:       1.5.18
+Version:       1.5.19
 Release:       1.2%{?dist}
 Group:         Network/Daemons
 License:       ASL 2.0
@@ -240,6 +240,12 @@ _EOF
 /sbin/fixfiles -R %{?scl:%scl_prefix}mod_passenger restore
 /sbin/restorecon -R -v /var/run
 %changelog
+* Fri Jul 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.5.19-1.2
+- Version bump
+
+* Fri Jul 12 2013 Brenton Leanhardt <bleanhar@redhat.com>
+- version bump
+
 * Fri Jul 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.5.18-1.2
 - <openshift-console> Bug 977909 - Remove Gemfile.fedora on RHEL builds
   (jdetiber@redhat.com)
