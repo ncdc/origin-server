@@ -6,8 +6,8 @@
 
 Summary:       Utility scripts for the OpenShift Origin broker
 Name:          openshift-origin-broker-util
-Version: 1.9.7
-Release:       1.2%{?dist}
+Version: 1.9.8
+Release:       1.1%{?dist}
 Group:         Network/Daemons
 License:       ASL 2.0
 URL:           http://www.openshift.com
@@ -86,6 +86,12 @@ cp man/*.8 %{buildroot}%{_mandir}/man8/
 %{_mandir}/man8/oo-stats.8.gz
 
 %changelog
+* Fri Jul 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.9.8-1.1
+- oo-accept-broker: check httpd_execmem (miciah.masters@gmail.com)
+
+* Fri Jul 12 2013 Brenton Leanhardt <bleanhar@redhat.com>
+- oo-accept-broker: check httpd_execmem (miciah.masters@gmail.com)
+
 * Wed Jun 26 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.9.7-1.2
 - With BIND_KRB_*, nsupdate -g needs to be used. (jpazdziora@redhat.com)
 
