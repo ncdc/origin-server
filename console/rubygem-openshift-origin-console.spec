@@ -9,7 +9,7 @@
 
 Summary:       OpenShift Origin Management Console
 Name:          rubygem-%{gem_name}
-Version: 1.9.14
+Version: 1.9.15
 Release:       1%{?dist}
 Group:         Development/Languages
 License:       ASL 2.0
@@ -146,6 +146,9 @@ cp -a ./%{gem_dir}/* %{buildroot}%{gem_dir}/
 %{gem_dir}/doc/%{gem_name}-%{version}
 
 %changelog
+* Tue Jul 16 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.9.15-1
+- Console: Make sure excluded_tags is set (miciah.masters@gmail.com)
+
 * Wed Jun 26 2013 Jason DeTiberus <jdetiber@redhat.com> 1.9.14-1
 - <console> Bug 978248 - Remove mongodb link for Getting Started page
   (jdetiber@redhat.com)
