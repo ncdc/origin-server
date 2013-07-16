@@ -6,8 +6,8 @@
 %global cartridgedir %{_libexecdir}/openshift/cartridges/v2/ruby
 
 Name:          openshift-origin-cartridge-ruby
-Version:       0.4.9
-Release:       1.1%{?dist}
+Version:       0.4.10.1
+Release:       1%{?dist}
 Summary:       Ruby cartridge
 Group:         Development/Languages
 License:       ASL 2.0
@@ -167,6 +167,14 @@ Ruby cartridge for OpenShift. (Cartridge Format V2)
 %doc %{cartridgedir}/LICENSE
 
 %changelog
+* Tue Jul 16 2013 Brenton Leanhardt <bleanhar@redhat.com> 0.4.10.1-1
+- Bug 970658, Bug 984991: Run 'rake assets:precompile' only if that Rake task
+  is available. (asari.ruby@gmail.com)
+
+* Tue Jul 16 2013 Brenton Leanhardt <bleanhar@redhat.com>
+- Bug 970658, Bug 984991: Run 'rake assets:precompile' only if that Rake task
+  is available. (asari.ruby@gmail.com)
+
 * Wed Jun 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 0.4.9-1.1
 - Bug 971460 - clear env settings (jhonce@redhat.com)
 - Bug 971460 - Refactor path_append/prepend to accept multiple elements
