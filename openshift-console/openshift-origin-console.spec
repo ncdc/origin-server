@@ -16,7 +16,7 @@
 Summary:       The OpenShift Management Console
 Name:          openshift-origin-console
 Version:       1.5.20
-Release:       1%{?dist}
+Release:       2%{?dist}
 Group:         Network/Daemons
 License:       ASL 2.0
 URL:           http://www.openshift.com
@@ -240,6 +240,9 @@ _EOF
 /sbin/fixfiles -R %{?scl:%scl_prefix}mod_passenger restore
 /sbin/restorecon -R -v /var/run
 %changelog
+* Tue Jul 16 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.5.20-2
+- Rebuild with updated console rubygem
+
 * Fri Jul 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.5.20-1
 - Version bump
 
