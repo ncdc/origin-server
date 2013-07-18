@@ -15,7 +15,7 @@
 
 Summary:       The OpenShift Management Console
 Name:          openshift-origin-console
-Version:       1.5.22
+Version:       1.5.23
 Release:       1%{?dist}
 Group:         Network/Daemons
 License:       ASL 2.0
@@ -241,6 +241,10 @@ _EOF
 /sbin/fixfiles -R %{?scl:%scl_prefix}mod_passenger restore
 /sbin/restorecon -R -v /var/run
 %changelog
+* Thu Jul 18 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.5.23-1
+- Bug 985656 - minor improvement for consistency in broker and console spec
+  files (bleanhar@redhat.com)
+
 * Thu Jul 18 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.5.22-1
 - <Bug 985656> - add ruby wrapper (admiller@redhat.com)
 
