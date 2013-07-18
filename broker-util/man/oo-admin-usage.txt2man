@@ -9,8 +9,11 @@ SYNOPSIS
 DESCRIPTION
   This is a utility to list the usage for a particular user on OpenShift Origin.
   The usage can be filtered by application name, gear id, as well as a timeframe.
-  The usage cost displayed is based on the usage duration and the usage rate. 
-  It does not take into account any unbilled usage by the billing provider. 
+  The usage cost displayed is based on the usage duration and the usage rate.
+  It does not take into account any unbilled usage by the billing provider.
+  Usage statistics will only be collected if the
+  ENABLE_USAGE_TRACKING_DATASTORE setting in /etc/openshift/broker.conf is set
+  to true.
 
 OPTIONS
   -h|--help  

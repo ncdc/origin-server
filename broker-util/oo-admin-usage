@@ -167,7 +167,8 @@ rescue Mongoid::Errors::DocumentNotFound
   exit 5
 end
 
-puts "Usage for #{login} (Plan: #{user.plan_id})"
+puts "Usage for #{login} (Plan: #{user.plan_id})" if user.plan_id
+puts "Usage for #{login}" unless user.plan_id
 puts "------------------------------------------"
 
 filter = {"app_name" => app, "gear_id" => gear, "begin_time" => start_timeframe, "end_time" => end_timeframe}
@@ -220,12 +221,12 @@ if usage_data.count > 0
     puts "    Gear ID: #{usage.gear_id} (#{usage.app_name})"
     puts "   Duration: #{duration_str} (#{begin_time_str} - #{end_time_str})"
     puts "Cost (Est.): #{formatted_number(usage_cost)} ($#{usage_rate[:usd]}/#{usage_rate[:duration].to_s})" unless usage_rate.nil?
-    puts 
+    puts
   end
 
   puts "Note: The cost displayed is based on the usage duration and the usage rate. " \
-  "It does not take into account any unbilled usage by the billing provider."
-  puts 
+  "It does not take into account any unbilled usage by the billing provider." unless user.plan_id
+  puts
 else
   puts "No usage data found"
   puts
