@@ -28,8 +28,8 @@ Requires:      %{?scl:%scl_prefix}rubygem-passenger-native-libs
 Requires:      %{?scl:%scl_prefix}mod_passenger
 Requires:      %{?scl:%scl_prefix}rubygem(minitest)
 
-%if 0%{?rhel}
-Requires:      %{scl}-ruby-wrapper
+%if 0%{?scl:1}
+Requires:      %{?scl:%scl_prefix}ruby-wrapper
 Requires:      %{?scl:%scl_prefix}rubygem-therubyracer
 Requires:      openshift-origin-util-scl
 %endif
