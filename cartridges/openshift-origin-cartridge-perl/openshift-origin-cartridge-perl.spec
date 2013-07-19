@@ -1,7 +1,7 @@
 %global cartridgedir %{_libexecdir}/openshift/cartridges/v2/perl
 
 Name:          openshift-origin-cartridge-perl
-Version:       0.4.8
+Version:       0.4.8.1
 Release:       1%{?dist}
 Summary:       Perl cartridge
 Group:         Development/Languages
@@ -53,6 +53,9 @@ Perl cartridge for OpenShift. (Cartridge Format V2)
 
 
 %changelog
+* Fri Jul 19 2013 Brenton Leanhardt <bleanhar@redhat.com> 0.4.8.1-1
+- <perl cart> bug 977919 remove broken symlinks (lmeyer@redhat.com)
+
 * Thu Jun 20 2013 Jason DeTiberus <jdetiber@redhat.com> 0.4.8-1
 - <perl/bin/build> Bug 971403 - Tweak build script to account for unset HOME
   variable (jolamb@redhat.com)
