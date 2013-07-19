@@ -6,7 +6,7 @@
 %global cartridgedir %{_libexecdir}/openshift/cartridges/v2/ruby
 
 Name:          openshift-origin-cartridge-ruby
-Version:       0.4.10.1
+Version:       0.4.10.2
 Release:       1%{?dist}
 Summary:       Ruby cartridge
 Group:         Development/Languages
@@ -167,6 +167,9 @@ Ruby cartridge for OpenShift. (Cartridge Format V2)
 %doc %{cartridgedir}/LICENSE
 
 %changelog
+* Fri Jul 19 2013 Brenton Leanhardt <bleanhar@redhat.com> 0.4.10.2-1
+- <ruby cart> bug 977918 remove broken symlinks (lmeyer@redhat.com)
+
 * Tue Jul 16 2013 Brenton Leanhardt <bleanhar@redhat.com> 0.4.10.1-1
 - Bug 970658, Bug 984991: Run 'rake assets:precompile' only if that Rake task
   is available. (asari.ruby@gmail.com)
