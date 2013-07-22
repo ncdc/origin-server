@@ -2,8 +2,8 @@
 
 Summary:       Provides JBossEWS2.0 support
 Name:          openshift-origin-cartridge-jbossews
-Version:       0.4.7
-Release:       1.1%{?dist}
+Version:       0.4.8
+Release:       1%{?dist}
 Group:         Development/Languages
 License:       ASL 2.0
 URL:           http://www.openshift.com
@@ -75,6 +75,9 @@ alternatives --set jbossews-2.0 /usr/share/tomcat7
 %doc %{cartridgedir}/LICENSE
 
 %changelog
+* Mon Jul 22 2013 Brenton Leanhardt <bleanhar@redhat.com> 0.4.8-1
+- Bug 986933: add APP_UUID to process (bdecoste@gmail.com)
+
 * Wed Jun 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 0.4.7-1.1
 - Release bump
 
