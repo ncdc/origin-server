@@ -10,6 +10,7 @@ Requires:      oddjob
 Requires:      rng-tools
 Requires:      rubygem-openshift-origin-node
 Requires:      httpd
+Requires:      lsof
 Requires:      php >= 5.3.2
 Requires:      lsof
 BuildArch:     noarch
@@ -80,7 +81,7 @@ mv services/openshift-gears.service %{buildroot}/etc/systemd/system/openshift-ge
 %attr(0750,-,-) %{_sbindir}/oo-restorecon
 %attr(0750,-,-) %{_sbindir}/oo-restorer
 %attr(0750,-,apache) %{_sbindir}/oo-restorer-wrapper.sh
-%attr(0755,-,-) %{_sbindir}/oo-httpd-singular
+%attr(0750,-,-) %{_sbindir}/oo-httpd-singular
 %attr(0750,-,-) %{_sbindir}/oo-su
 %attr(0750,-,-) %{_sbindir}/oo-cartridge
 %attr(0750,-,-) %{_sbindir}/oo-admin-cartridge
@@ -96,6 +97,7 @@ mv services/openshift-gears.service %{buildroot}/etc/systemd/system/openshift-ge
 %{_mandir}/man8/oo-admin-ctl-gears.8.gz
 %{_mandir}/man8/oo-app-idle.8.gz
 %{_mandir}/man8/oo-autoidler.8.gz
+%{_mandir}/man8/oo-auto-idler.8.gz
 %{_mandir}/man8/oo-idler.8.gz
 %{_mandir}/man8/oo-idler-stats.8.gz
 %{_mandir}/man8/oo-init-quota.8.gz
