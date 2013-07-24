@@ -6,7 +6,7 @@
 
 Summary:       Utility scripts for the OpenShift Origin broker
 Name:          openshift-origin-broker-util
-Version: 1.9.9
+Version: 1.9.10
 Release:       1%{?dist}
 Group:         Network/Daemons
 License:       ASL 2.0
@@ -87,6 +87,9 @@ cp man/*.8 %{buildroot}%{_mandir}/man8/
 %{_mandir}/man8/oo-stats.8.gz
 
 %changelog
+* Wed Jul 24 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.9.10-1
+- <oo-admin-clear-pending-ops> man page added (lmeyer@redhat.com)
+
 * Fri Jul 19 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.9.9-1
 - Bug 958992 - oo-admin-usage refers to usage costs / rates / billing
   (calfonso@redhat.com)
