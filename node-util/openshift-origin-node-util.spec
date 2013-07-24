@@ -1,6 +1,6 @@
 Summary:       Utility scripts for the OpenShift Origin broker
 Name:          openshift-origin-node-util
-Version: 1.9.9
+Version: 1.9.9.1
 Release:       1.1%{?dist}
 Group:         Network/Daemons
 License:       ASL 2.0
@@ -126,6 +126,12 @@ mv services/openshift-gears.service %{buildroot}/etc/systemd/system/openshift-ge
 /sbin/restorecon /usr/sbin/oo-restorer* || :
 
 %changelog
+* Wed Jul 24 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.9.9.1-1.1
+- <oo-auto-idler> add man page (lmeyer@redhat.com)
+- Fix typo (dmcphers@redhat.com)
+- Idler whitelist. (mrunalp@gmail.com)
+- Adding lsof dependency (kraman@gmail.com)
+
 * Wed Jun 12 2013 Brenton Leanhardt <bleanhar@redhat.com> 1.9.9-1.1
 - Bug 971356: The symbolic link for the old cartridge was confusing the
   websocket test. (rmillner@redhat.com)
