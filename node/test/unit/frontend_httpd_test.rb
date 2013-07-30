@@ -20,7 +20,7 @@
 require_relative '../test_helper'
 require 'fileutils'
 
-class FrontendHttpServerModelTest < OpenShift::NodeTestCase
+class FrontendHttpServerModelTest < OpenShift::V2SdkTestCase
 
   class FauxApacheDB < Hash
     READER = 1
@@ -408,7 +408,7 @@ class FrontendHttpServerModelTest < OpenShift::NodeTestCase
 
 end
 
-class TestApacheDB < OpenShift::NodeTestCase
+class TestApacheDB < OpenShift::V2SdkTestCase
 
   def setup
 

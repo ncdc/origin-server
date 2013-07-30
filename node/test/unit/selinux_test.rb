@@ -79,7 +79,7 @@ class SELinuxUtilsContextTest < Test::Unit::TestCase
 end
 
 
-class SELinuxUtilsChconTest < OpenShift::NodeTestCase
+class SELinuxUtilsChconTest < OpenShift::V2SdkTestCase
     def setup
     @config_mock = mock('OpenShift::Config')
     @config_mock.stubs(:get).returns(nil)
@@ -154,7 +154,7 @@ class SELinuxUtilsChconTest < OpenShift::NodeTestCase
 end
 
 
-class SELinuxUtilsSetMCSLabelTest < OpenShift::NodeTestCase
+class SELinuxUtilsSetMCSLabelTest < OpenShift::V2SdkTestCase
 
   def setup
     @config_mock = mock('OpenShift::Config')
