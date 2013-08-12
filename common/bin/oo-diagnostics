@@ -34,6 +34,7 @@
 class OODiag
 
   require 'rubygems'
+  require 'openshift-origin-common'
   require 'tempfile'
   require 'bundler'
 
@@ -816,6 +817,25 @@ class OODiag
     #
     # done with the tmp file
     system "rm #{tmpfile}"
+  end
+
+  def test_node_containerization_plugin
+    skip_test unless @is_node
+
+    config = OpenShift::Config.new
+
+    plugins = config.get('OPENSHIFT_NODE_PLUGINS')
+
+    observer = (plugins.split(',').include? 'openshift-origin-node/plugins/unix_user_observer' rescue false)
+
+    # In OpenShift Enterprise 1.2 and earlier, the unix_user_observer
+    # node plug-in provides containerization.
+    do_fail <<-"NOPLUGIN" unless observer
+      The OPENSHIFT_NODE_PLUGINS setting in the node configuration file must include
+      the openshift-origin-node/plugins/unix_user_observer plug-in in order for gear
+      containerization using SELinux, cgroups, filesystem quotas, and pam_limits
+      to function properly.
+    NOPLUGIN
   end
 
   def test_node_mco_log
