@@ -547,6 +547,8 @@ module OpenShift
 
           buffer = ''
 
+          web_proxy_cart = @cartridge_model.web_proxy
+
           #TODO this really should be parallelized
           gears.each do |gear|
             # since the gear will look like 51e96b5e4f43c070fc000001@s1-agoldste.dev.rhcloud.com
@@ -557,7 +559,7 @@ module OpenShift
             init_option = (options[:init] == true) ? ' --init' : ''
 
             @cartridge_model.do_control('disable-server',
-                                        @cartridge_model.web_proxy,
+                                        web_proxy_cart,
                                         args: gear_uuid,
                                         pre_action_hooks_enabled:  false,
                                         post_action_hooks_enabled: false,
@@ -575,7 +577,7 @@ module OpenShift
             options[:out].puts(out) if options[:out]
 
             @cartridge_model.do_control('enable-server',
-                                        @cartridge_model.web_proxy,
+                                        web_proxy_cart,
                                         args: gear_uuid,
                                         pre_action_hooks_enabled:  false,
                                         post_action_hooks_enabled: false,
@@ -680,9 +682,9 @@ module OpenShift
           write_deployment_metadata(deployment_datetime, 'state', 'DEPLOYED')
           clean_up_deployments_before(deployment_datetime)
 
-          if @cartridge_model.web_proxy
+          if web_proxy_cart = @cartridge_model.web_proxy
             @cartridge_model.do_control('enable-server',
-                                        @cartridge_model.web_proxy,
+                                        web_proxy_cart,
                                         args: self.uuid,
                                         pre_action_hooks_enabled:  false,
                                         post_action_hooks_enabled: false,
@@ -714,6 +716,8 @@ module OpenShift
 
           buffer = ''
 
+          web_proxy_cart = @cartridge_model.web_proxy
+
           #TODO this really should be parallelized
           gears.each do |gear|
             # since the gear will look like 51e96b5e4f43c070fc000001@s1-agoldste.dev.rhcloud.com
@@ -721,7 +725,7 @@ module OpenShift
             gear_uuid = gear.split('@')[0]
 
             @cartridge_model.do_control('disable-server',
-                                        @cartridge_model.web_proxy,
+                                        web_proxy_cart,
                                         args: gear_uuid,
                                         pre_action_hooks_enabled:  false,
                                         post_action_hooks_enabled: false,
@@ -739,7 +743,7 @@ module OpenShift
             options[:out].puts(out) if options[:out]
 
             @cartridge_model.do_control('enable-server',
-                                        @cartridge_model.web_proxy,
+                                        web_proxy_cart,
                                         args: gear_uuid,
                                         pre_action_hooks_enabled:  false,
                                         post_action_hooks_enabled: false,
