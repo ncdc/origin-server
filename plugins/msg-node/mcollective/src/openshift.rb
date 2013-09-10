@@ -949,7 +949,7 @@ module MCollective
 
       def oo_update_cluster(args)
         with_container_from_args(args) do |container|
-          container.update_cluster(args['--cluster'])
+          container.update_cluster(args['--proxies'], args['--cluster'])
         end
       end
 
