@@ -112,7 +112,7 @@ class Gear
 
   def publish_routing_info
     self.port_interfaces.each { |pi|
-        pi.publish_endpoint(self.group_instance.application)
+      pi.publish_endpoint(self.group_instance.application)
     }
   end
 
