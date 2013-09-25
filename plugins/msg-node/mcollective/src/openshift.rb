@@ -53,7 +53,7 @@ module MCollective
             require path
             include ::Openshift::AgentExtension
             agent_startup
-          end        
+          end
         rescue Exception => e
           Log.instance.error e.message
           Log.instance.error e.backtrace.inspect
@@ -942,9 +942,13 @@ module MCollective
 
       def oo_restart(args)
         cart_name = args['--cart-name']
+        options = {}
+        if args['--all']
+          options[:all] = true
+        end
 
         with_container_from_args(args) do |container, output|
-          output << container.restart(cart_name)
+          container.restart(cart_name, options)
         end
       end
 
