@@ -20,7 +20,7 @@ Rails.application.routes.draw do
         match 'authorizations' => 'authorizations#destroy_all', :via => :delete
       end
 
-      resources :applications, :only => [:index, :show, :create, :destroy], :id => id_with_format do
+      resources :applications, :only => [:index, :show, :create, :update, :destroy], :id => id_with_format do
         resource :descriptor, :only => :show
         resources :gear_groups, :id => id_with_format, :only => [:index, :show]
         resources :gears, :only => [:index, :show], :id => id_with_format
@@ -32,6 +32,7 @@ Rails.application.routes.draw do
         resources :aliases, :only => [:index, :show, :create, :update, :destroy], :controller => :alias, :id => id_with_format
         resources :members, :only => :index, :controller => :application_members, :id => id_with_format
         resources :environment_variables, :only => [:index, :show, :create, :update, :destroy], :id => id_with_format, :path => 'environment-variables'
+        resources :deployments, :only => [:index, :show, :create], :controller => :deployments, :id => id_with_format
       end
 
       # Allow restful update of the domain name via the standard id parameter
