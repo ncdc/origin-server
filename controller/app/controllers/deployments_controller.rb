@@ -50,7 +50,7 @@ class DeploymentsController < BaseController
                                    ref: d["ref"],
                                   sha1: d["sha1"],
                           artifact_url: d["artifact_url"],
-                           activations: d["activations"],
+                           activations: d["activations"].map(&:to_f),
                             hot_deploy: d["hot_deploy"] || false,
                      force_clean_build: d["force_clean_build"] || false))
       end
