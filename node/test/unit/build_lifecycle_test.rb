@@ -1140,14 +1140,14 @@ class BuildLifecycleTest < OpenShift::NodeTestCase
     gear_result3 = { gear_uuid: gear_uuids[2], status: 'success', errors: [], messages: [] }
     @container.expects(:with_gear_rotation)
               .with(inner_options)
-              .multiple_yields([entry1, gear_env, inner_options],
-                               [entry2, gear_env, inner_options],
-                               [entry3, gear_env, inner_options])
+              .multiple_yields([entry1.to_ssh_url, gear_env, inner_options],
+                               [entry2.to_ssh_url, gear_env, inner_options],
+                               [entry3.to_ssh_url, gear_env, inner_options])
               .returns([gear_result1, gear_result2, gear_result3])
 
     @container.expects(:activate_local_gear).with(inner_options)
-    @container.expects(:activate_remote_gear).with(entry2, gear_env, inner_options)
-    @container.expects(:activate_remote_gear).with(entry3, gear_env, inner_options)
+    @container.expects(:activate_remote_gear).with(entry2.to_ssh_url, gear_env, inner_options)
+    @container.expects(:activate_remote_gear).with(entry3.to_ssh_url, gear_env, inner_options)
 
     result = @container.activate(activate_options)
 
@@ -1181,14 +1181,14 @@ class BuildLifecycleTest < OpenShift::NodeTestCase
     gear_result3 = { gear_uuid: gear_uuids[2], status: 'failure', errors: [], messages: [] }
     @container.expects(:with_gear_rotation)
               .with(inner_options)
-              .multiple_yields([entry1, gear_env, inner_options],
-                               [entry2, gear_env, inner_options],
-                               [entry3, gear_env, inner_options])
+              .multiple_yields([entry1.to_ssh_url, gear_env, inner_options],
+                               [entry2.to_ssh_url, gear_env, inner_options],
+                               [entry3.to_ssh_url, gear_env, inner_options])
               .returns([gear_result1, gear_result2, gear_result3])
 
     @container.expects(:activate_local_gear).with(inner_options)
-    @container.expects(:activate_remote_gear).with(entry2, gear_env, inner_options)
-    @container.expects(:activate_remote_gear).with(entry3, gear_env, inner_options)
+    @container.expects(:activate_remote_gear).with(entry2.to_ssh_url, gear_env, inner_options)
+    @container.expects(:activate_remote_gear).with(entry3.to_ssh_url, gear_env, inner_options)
 
     result = @container.activate(activate_options)
 
@@ -1201,20 +1201,24 @@ class BuildLifecycleTest < OpenShift::NodeTestCase
 
   def test_activate_remote_gear_success
     deployment_id = 'abcd1234'
-    g = ::OpenShift::Runtime::GearRegistry::Entry.new(uuid: '1234', proxy_hostname: 'node.example.com')
+    g = '1234@node.example.com'
     gear_uuid = "1234"
     gear_env = {}
     options = { deployment_id: deployment_id }
 
     remote_result = {
       status: 'success',
-      gear_uuid: gear_uuid,
-      status: 'success',
-      messages: [],
-      errors: []
+      gear_results: {
+        gear_uuid => {
+          gear_uuid: gear_uuid,
+          status: 'success',
+          messages: [],
+          errors: []
+        }
+      }
     }
 
-    @container.expects(:run_in_container_context).with("/usr/bin/oo-ssh #{g.to_ssh_url} gear activate #{deployment_id} --as-json --no-rotation",
+    @container.expects(:run_in_container_context).with("/usr/bin/oo-ssh #{g} gear activate #{deployment_id} --as-json --no-rotation",
                                                        env: gear_env,
                                                        expected_exitstatus: 0)
                                                  .returns(JSON.dump(remote_result))
@@ -1227,12 +1231,12 @@ class BuildLifecycleTest < OpenShift::NodeTestCase
 
   def test_activate_remote_gear_activation_fails
     deployment_id = 'abcd1234'
-    g = ::OpenShift::Runtime::GearRegistry::Entry.new(uuid: '1234', proxy_hostname: 'node.example.com')
+    g = '1234@node.example.com'
     gear_uuid = "1234"
     gear_env = {}
     options = { deployment_id: deployment_id }
 
-    @container.expects(:run_in_container_context).with("/usr/bin/oo-ssh #{g.to_ssh_url} gear activate #{deployment_id} --as-json --no-rotation",
+    @container.expects(:run_in_container_context).with("/usr/bin/oo-ssh #{g} gear activate #{deployment_id} --as-json --no-rotation",
                                                        env: gear_env,
                                                        expected_exitstatus: 0)
                                                  .raises(::OpenShift::Runtime::Utils::ShellExecutionException.new('msg'))
@@ -1244,20 +1248,24 @@ class BuildLifecycleTest < OpenShift::NodeTestCase
 
   def test_activate_remote_gear_post_install
     deployment_id = 'abcd1234'
-    g = ::OpenShift::Runtime::GearRegistry::Entry.new(uuid: '1234', proxy_hostname: 'node.example.com')
+    g = '1234@node.example.com'
     gear_uuid = "1234"
     gear_env = {}
     options = { deployment_id: deployment_id, post_install: true }
 
     remote_result = {
       status: 'success',
-      gear_uuid: gear_uuid,
-      status: 'success',
-      messages: [],
-      errors: []
+      gear_results: {
+        gear_uuid => {
+          gear_uuid: gear_uuid,
+          status: 'success',
+          messages: [],
+          errors: []
+        }
+      }
     }
 
-    @container.expects(:run_in_container_context).with("/usr/bin/oo-ssh #{g.to_ssh_url} gear activate #{deployment_id} --as-json --post-install --no-rotation",
+    @container.expects(:run_in_container_context).with("/usr/bin/oo-ssh #{g} gear activate #{deployment_id} --as-json --post-install --no-rotation",
                                                        env: gear_env,
                                                        expected_exitstatus: 0)
                                                  .returns(JSON.dump(remote_result))
@@ -1265,6 +1273,81 @@ class BuildLifecycleTest < OpenShift::NodeTestCase
     result = @container.activate_remote_gear(g, gear_env, options)
 
     assert_equal 'success', result[:status]
+  end
+
+  def test_activate_remote_gear_missing_gear_results_in_result
+    deployment_id = 'abcd1234'
+    g = '1234@node.example.com'
+    gear_uuid = "1234"
+    gear_env = {}
+    options = { deployment_id: deployment_id }
+
+    remote_result = {
+      status: 'success',
+    }
+
+    @container.expects(:run_in_container_context).with("/usr/bin/oo-ssh #{g} gear activate #{deployment_id} --as-json --no-rotation",
+                                                       env: gear_env,
+                                                       expected_exitstatus: 0)
+                                                 .returns(JSON.dump(remote_result))
+
+    result = @container.activate_remote_gear(g, gear_env, options)
+
+    assert_equal 'failure', result[:status]
+    assert_match "Invalid result JSON received from remote activate call - missing gear_results:", result[:errors][0]
+  end
+
+  def test_activate_remote_gear_missing_gear_in_result
+    deployment_id = 'abcd1234'
+    g = '1234@node.example.com'
+    gear_uuid = "1234"
+    gear_env = {}
+    options = { deployment_id: deployment_id }
+
+    remote_result = {
+      status: 'success',
+      gear_results: {
+      }
+    }
+
+    @container.expects(:run_in_container_context).with("/usr/bin/oo-ssh #{g} gear activate #{deployment_id} --as-json --no-rotation",
+                                                       env: gear_env,
+                                                       expected_exitstatus: 0)
+                                                 .returns(JSON.dump(remote_result))
+
+    result = @container.activate_remote_gear(g, gear_env, options)
+
+    assert_equal 'failure', result[:status]
+    assert_match "Invalid result JSON received from remote activate call - missing gear_results[#{gear_uuid}]:", result[:errors][0]
+  end
+
+  def test_activate_remote_gear_missing_gear_status_in_result
+    deployment_id = 'abcd1234'
+    g = '1234@node.example.com'
+    gear_uuid = "1234"
+    gear_env = {}
+    options = { deployment_id: deployment_id }
+
+    remote_result = {
+      status: 'success',
+      gear_results: {
+        gear_uuid => {
+          gear_uuid: gear_uuid,
+          messages: [],
+          errors: []
+        }
+      }
+    }
+
+    @container.expects(:run_in_container_context).with("/usr/bin/oo-ssh #{g} gear activate #{deployment_id} --as-json --no-rotation",
+                                                       env: gear_env,
+                                                       expected_exitstatus: 0)
+                                                 .returns(JSON.dump(remote_result))
+
+    result = @container.activate_remote_gear(g, gear_env, options)
+
+    assert_equal 'failure', result[:status]
+    assert_match "Invalid result JSON received from remote activate call - missing gear_results[#{gear_uuid}][:status]:", result[:errors][0]
   end
 
   def test_activate_local_gear_deployment_doesnt_exist

@@ -698,10 +698,11 @@ class ApplicationContainerTest < OpenShift::NodeTestCase
     @container.cartridge_model.expects(:web_proxy).returns(nil)
 
     @container.expects(:calculate_batch_size).with(1, 0.2).returns(1)
-    Parallel.expects(:map).with([@container.uuid], :in_threads => 1).yields(@container.uuid)
+    gear_ssh_url = "#{@container.uuid}@localhost"
+    Parallel.expects(:map).with([gear_ssh_url], :in_threads => 1).yields(gear_ssh_url)
 
     with_gear_rotation_options = {b:2}
-    @container.expects(:rotate_and_yield).with(@container.uuid, gear_env, with_gear_rotation_options).yields(@container.uuid, gear_env, with_gear_rotation_options)
+    @container.expects(:rotate_and_yield).with(gear_ssh_url, gear_env, with_gear_rotation_options).yields(gear_ssh_url, gear_env, with_gear_rotation_options)
 
     @container.with_gear_rotation(with_gear_rotation_options) do |target_gear, local_gear_env|
       count += 1
@@ -710,7 +711,7 @@ class ApplicationContainerTest < OpenShift::NodeTestCase
     end
 
     assert_equal 1, count
-    assert_equal @container.uuid, yielded_target_gear
+    assert_equal gear_ssh_url, yielded_target_gear
     assert_equal gear_env, yielded_local_gear_env
   end
 
@@ -725,17 +726,12 @@ class ApplicationContainerTest < OpenShift::NodeTestCase
     proxy_cart = mock()
     @container.cartridge_model.expects(:web_proxy).returns(proxy_cart)
 
-    gear_registry = mock()
-    @container.expects(:gear_registry).returns(gear_registry)
-    entry = mock()
-    entries = { :web => { @container.uuid => entry, 'a' => 'b' } }
-    gear_registry.expects(:entries).returns(entries)
-
     @container.expects(:calculate_batch_size).with(1, 0.2).returns(1)
-    Parallel.expects(:map).with([entry], :in_threads => 1).yields(entry)
+    gear_ssh_url = "#{@container.uuid}@localhost"
+    Parallel.expects(:map).with([gear_ssh_url], :in_threads => 1).yields(gear_ssh_url)
 
     with_gear_rotation_options = {b:2}
-    @container.expects(:rotate_and_yield).with(entry, gear_env, with_gear_rotation_options).yields(entry, gear_env, with_gear_rotation_options)
+    @container.expects(:rotate_and_yield).with(gear_ssh_url, gear_env, with_gear_rotation_options).yields(gear_ssh_url, gear_env, with_gear_rotation_options)
 
     @container.with_gear_rotation(with_gear_rotation_options) do |target_gear, local_gear_env|
       count += 1
@@ -744,7 +740,7 @@ class ApplicationContainerTest < OpenShift::NodeTestCase
     end
 
     assert_equal 1, count
-    assert_equal entry, yielded_target_gear
+    assert_equal gear_ssh_url, yielded_target_gear
     assert_equal gear_env, yielded_local_gear_env
   end
 
@@ -762,17 +758,21 @@ class ApplicationContainerTest < OpenShift::NodeTestCase
     gear_registry = mock()
     @container.expects(:gear_registry).returns(gear_registry)
     entry1 = mock()
+    ssh_url_1 = "#{@container.uuid}@somehost"
+    entry1.expects(:to_ssh_url).returns(ssh_url_1)
     entry2 = mock()
+    ssh_url_2 = '5504@host1'
+    entry2.expects(:to_ssh_url).returns(ssh_url_2)
     uuid2 = '5505'
     entries = { :web => { @container.uuid => entry1, uuid2 => entry2 } }
     gear_registry.expects(:entries).returns(entries)
 
     @container.expects(:calculate_batch_size).with(2, 0.2).returns(1)
-    Parallel.expects(:map).with([entry1, entry2], :in_threads => 1).multiple_yields(entry1, entry2)
+    Parallel.expects(:map).with([ssh_url_1, ssh_url_2], :in_threads => 1).multiple_yields(ssh_url_1, ssh_url_2)
 
     with_gear_rotation_options = {b:2, all: true}
-    @container.expects(:rotate_and_yield).with(entry1, gear_env, with_gear_rotation_options).yields(entry1, gear_env, with_gear_rotation_options)
-    @container.expects(:rotate_and_yield).with(entry2, gear_env, with_gear_rotation_options).yields(entry2, gear_env, with_gear_rotation_options)
+    @container.expects(:rotate_and_yield).with(ssh_url_1, gear_env, with_gear_rotation_options).yields(ssh_url_1, gear_env, with_gear_rotation_options)
+    @container.expects(:rotate_and_yield).with(ssh_url_2, gear_env, with_gear_rotation_options).yields(ssh_url_2, gear_env, with_gear_rotation_options)
 
     @container.with_gear_rotation(with_gear_rotation_options) do |target_gear, local_gear_env|
       count += 1
@@ -781,9 +781,9 @@ class ApplicationContainerTest < OpenShift::NodeTestCase
     end
 
     assert_equal 2, count
-    assert_equal entry1, yielded_target_gears[0]
+    assert_equal ssh_url_1, yielded_target_gears[0]
     assert_equal gear_env, yielded_local_gear_envs[0]
-    assert_equal entry2, yielded_target_gears[1]
+    assert_equal ssh_url_2, yielded_target_gears[1]
     assert_equal gear_env, yielded_local_gear_envs[1]
   end
 
@@ -812,9 +812,8 @@ class ApplicationContainerTest < OpenShift::NodeTestCase
     proxy_cart = mock()
     options = {a: 1, proxy_cart: proxy_cart}
     yielded_values = []
-    target_gear = mock()
-    target_gear.expects(:uuid).returns('1234')
     local_gear_env = mock()
+    target_gear_ssh_url = '1234@somehost'
 
     rotate_out_results = {
       status: 'success',
@@ -846,7 +845,7 @@ class ApplicationContainerTest < OpenShift::NodeTestCase
     }
     @container.expects(:update_proxy_status).with(action: :enable, gear_uuid: '1234', cartridge: proxy_cart).returns(rotate_in_results)
 
-    result = @container.rotate_and_yield(target_gear, local_gear_env, options) do |*values|
+    result = @container.rotate_and_yield(target_gear_ssh_url, local_gear_env, options) do |*values|
       yielded_values = values
       {
         status: 'success',
@@ -856,7 +855,7 @@ class ApplicationContainerTest < OpenShift::NodeTestCase
       }
     end
 
-    assert_equal [target_gear, local_gear_env, options], yielded_values
+    assert_equal [target_gear_ssh_url, local_gear_env, options], yielded_values
     expected_result = HashWithIndifferentAccess.new({
       status: 'success',
       foo: 'bar',
@@ -908,22 +907,34 @@ class ApplicationContainerTest < OpenShift::NodeTestCase
     local_gear_env = mock()
     cart_name = 'proxy_cart_name'
 
-    target_result = {
+    gear_result = {
       status: 'failure',
       target_gear_uuid: '1234',
       messages: [],
       errors: []
     }
 
-    @container.expects(:with_gear_rotation).yields(target_gear, local_gear_env, options).returns([target_result])
+    @container.expects(:with_gear_rotation).yields(target_gear, local_gear_env, options).returns([gear_result])
 
-    @container.expects(:restart_gear).with(target_gear, local_gear_env, cart_name, options).returns(target_result)
+    @container.expects(:restart_gear).with(target_gear, local_gear_env, cart_name, options).returns(gear_result)
 
     result = @container.restart(cart_name, options)
-    assert_equal target_result, result
+    expected_result = {
+      status: 'failure',
+      gear_results: {
+        '1234' => {
+          status: 'failure',
+          target_gear_uuid: '1234',
+          messages: [],
+          errors: []
+        }
+      }
+    }
+
+    assert_equal expected_result, result
   end
 
-  def test_restart_gear_string
+  def test_restart_gear_success
     target_gear = @container.uuid
     local_gear_env = {a: 1}
     cart_name = 'cart_name'
@@ -944,69 +955,72 @@ class ApplicationContainerTest < OpenShift::NodeTestCase
     assert_empty result[:errors]
   end
 
-  def test_restart_gear_entry_success
-    target_gear = mock()
-    target_gear_uuid = 'uuid'
-    local_gear_env = {a: 1}
-    cart_name = 'cart_name'
-    options = {b: 2}
-    restart_output = {status: 'success', from_json: true}
-    restart_output_json = restart_output.to_json
-
-    target_gear.expects(:uuid).returns(target_gear_uuid)
-    target_gear_ssh_url = 'uuid@host'
-    target_gear.expects(:to_ssh_url).returns(target_gear_ssh_url)
-    @container.expects(:run_in_container_context).with("/usr/bin/oo-ssh #{target_gear_ssh_url} gear restart --cart #{cart_name} --as-json",
-                                                      env: local_gear_env,
-                                                      expected_exitstatus: 0).returns([restart_output_json, '', 0])
-
-    result = @container.restart_gear(target_gear, local_gear_env, cart_name, options)
-
-    restart_output.each_key { |k| assert_equal restart_output[k], result[k]}
-  end
-
-  def test_restart_gear_entry_nil_or_empty_output
+  def test_restart_gear_nil_or_empty_output
     [nil, ''].each do |output|
-      target_gear = mock()
-      target_gear_uuid = 'uuid'
+      target_gear_ssh_url = 'uuid@host'
       local_gear_env = {a: 1}
       cart_name = 'cart_name'
       options = {b: 2}
 
-      target_gear.expects(:uuid).returns(target_gear_uuid)
-      target_gear_ssh_url = 'uuid@host'
-      target_gear.expects(:to_ssh_url).returns(target_gear_ssh_url)
       @container.expects(:run_in_container_context).with("/usr/bin/oo-ssh #{target_gear_ssh_url} gear restart --cart #{cart_name} --as-json",
                                                         env: local_gear_env,
                                                         expected_exitstatus: 0).returns([output, '', 0])
 
-      result = @container.restart_gear(target_gear, local_gear_env, cart_name, options)
+      result = @container.restart_gear(target_gear_ssh_url, local_gear_env, cart_name, options)
       assert_equal 'failure', result[:status]
       assert_match 'No result JSON was received from the remote gear restart call', result[:errors][0]
     end
   end
 
-  def test_restart_gear_entry_missing_status_in_result
-    [nil, ''].each do |output|
-      target_gear = mock()
-      target_gear_uuid = 'uuid'
-      local_gear_env = {a: 1}
-      cart_name = 'cart_name'
-      options = {b: 2}
-      restart_output = {from_json: true}
-      restart_output_json = restart_output.to_json
+  def test_restart_gear_missing_gear_results_in_result
+    target_gear_ssh_url = 'uuid@host'
+    local_gear_env = {a: 1}
+    cart_name = 'cart_name'
+    options = {b: 2}
+    restart_output = {}
+    restart_output_json = restart_output.to_json
 
-      target_gear.expects(:uuid).returns(target_gear_uuid)
-      target_gear_ssh_url = 'uuid@host'
-      target_gear.expects(:to_ssh_url).returns(target_gear_ssh_url)
-      @container.expects(:run_in_container_context).with("/usr/bin/oo-ssh #{target_gear_ssh_url} gear restart --cart #{cart_name} --as-json",
-                                                        env: local_gear_env,
-                                                        expected_exitstatus: 0).returns([restart_output_json, '', 0])
+    @container.expects(:run_in_container_context).with("/usr/bin/oo-ssh #{target_gear_ssh_url} gear restart --cart #{cart_name} --as-json",
+                                                      env: local_gear_env,
+                                                      expected_exitstatus: 0).returns([restart_output_json, '', 0])
 
-      result = @container.restart_gear(target_gear, local_gear_env, cart_name, options)
-      assert_equal 'failure', result[:status]
-      assert_match 'Invalid result JSON received from remote gear restart call:', result[:errors][0]
-    end
+    result = @container.restart_gear(target_gear_ssh_url, local_gear_env, cart_name, options)
+    assert_equal 'failure', result[:status]
+    assert_match 'Invalid result JSON received from remote gear restart call - missing gear_results:', result[:errors][0]
+  end
+
+  def test_restart_gear_missing_gear_in_result
+    target_gear_ssh_url = 'uuid@host'
+    local_gear_env = {a: 1}
+    cart_name = 'cart_name'
+    options = {b: 2}
+    restart_output = { gear_results: {} }
+    restart_output_json = restart_output.to_json
+
+    @container.expects(:run_in_container_context).with("/usr/bin/oo-ssh #{target_gear_ssh_url} gear restart --cart #{cart_name} --as-json",
+                                                      env: local_gear_env,
+                                                      expected_exitstatus: 0).returns([restart_output_json, '', 0])
+
+    result = @container.restart_gear(target_gear_ssh_url, local_gear_env, cart_name, options)
+    assert_equal 'failure', result[:status]
+    assert_match 'Invalid result JSON received from remote gear restart call - missing gear_results[uuid]:', result[:errors][0]
+  end
+
+  def test_restart_gear_missing_gear_status_in_result
+    target_gear_ssh_url = 'uuid@host'
+    local_gear_env = {a: 1}
+    cart_name = 'cart_name'
+    options = {b: 2}
+    restart_output = { gear_results: { 'uuid' => {} } }
+    restart_output_json = restart_output.to_json
+
+    @container.expects(:run_in_container_context).with("/usr/bin/oo-ssh #{target_gear_ssh_url} gear restart --cart #{cart_name} --as-json",
+                                                      env: local_gear_env,
+                                                      expected_exitstatus: 0).returns([restart_output_json, '', 0])
+
+    result = @container.restart_gear(target_gear_ssh_url, local_gear_env, cart_name, options)
+    assert_equal 'failure', result[:status]
+    assert_match 'Invalid result JSON received from remote gear restart call - missing gear_results[uuid][:status]:', result[:errors][0]
   end
 
   def test_stop_gear_no_proxy

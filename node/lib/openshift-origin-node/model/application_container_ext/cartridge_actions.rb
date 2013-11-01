@@ -311,7 +311,7 @@ module OpenShift
         # options: hash
         #   :out        : an IO to which any stdout should be written (default: nil)
         #   :err        : an IO to which any stderr should be written (default: nil)
-        #   :report_deployments : a boolean to toggle hot deploy for the operation (default: false)
+        #   :report_deployments : a boolean to toggle reporting this deployment to the broker (default: false)
         #
         def post_receive(options={})
           result = {
@@ -704,31 +704,24 @@ module OpenShift
           # if it's a new gear via scale-up, force hot_deploy to false
           options[:hot_deploy] = false if options[:post_install]
 
-          parallel_results = with_gear_rotation(options) do |target_gear, local_gear_env, options|
-            target_gear_uuid = target_gear.is_a?(String) ? target_gear : target_gear.uuid
+          parallel_results = with_gear_rotation(options) do |target_gear_ssh_url, local_gear_env, options|
+            target_gear_uuid = target_gear_ssh_url.split('@')[0]
             if target_gear_uuid == self.uuid
               activate_local_gear(options)
             else
-              activate_remote_gear(target_gear, local_gear_env, options)
+              activate_remote_gear(target_gear_ssh_url, local_gear_env, options)
             end
           end
 
           activated_gear_uuids = []
 
-          if options[:all] || options[:gears]
-            result = { status: RESULT_SUCCESS, gear_results: {}}
+          result = { status: RESULT_SUCCESS, gear_results: {} }
 
-            parallel_results.each do |gear_result|
-              gear_uuid = gear_result[:gear_uuid]
-              activated_gear_uuids << gear_uuid
-              result[:gear_results][gear_uuid] = gear_result
-              result[:status] = RESULT_FAILURE unless gear_result[:status] == RESULT_SUCCESS
-            end
-          else
-            activated_gear_uuids = [self.uuid]
-
-            # neither options[:all] or options[:gears] was set, so just return the first (and what should be the only) result
-            result = parallel_results[0]
+          parallel_results.each do |gear_result|
+            gear_uuid = gear_result[:gear_uuid]
+            activated_gear_uuids << gear_uuid
+            result[:gear_results][gear_uuid] = gear_result
+            result[:status] = RESULT_FAILURE unless gear_result[:status] == RESULT_SUCCESS
           end
 
           logger.info "Activation result for gears #{activated_gear_uuids.join(", ")}: #{result}"
@@ -738,13 +731,13 @@ module OpenShift
 
         # Activates a remote gear
         #
-        # @param [OpenShift::Runtime::GearRegistry::Entry] gear the remote gear to activate
+        # @param [String] gear the remote gear to activate (SSH URL)
         # @param [Hash] gear_env the environment for the local gear
         # @param [Hash] options activation options
         # @option options [String] :deployment_id the deployment ID to activate
         # @option options [Boolean] :post_install if true, run the post-install hook during activation
         def activate_remote_gear(gear, gear_env, options={})
-          gear_uuid = gear.uuid
+          gear_uuid = gear.split('@')[0]
 
           result = {
             status: RESULT_FAILURE,
@@ -760,19 +753,24 @@ module OpenShift
           result[:messages] << "Activating gear #{gear_uuid}, deployment id: #{options[:deployment_id]},#{post_install_option}\n"
 
           begin
-            out, err, rc = run_in_container_context("/usr/bin/oo-ssh #{gear.to_ssh_url} gear activate #{options[:deployment_id]} --as-json#{post_install_option} --no-rotation",
+            out, err, rc = run_in_container_context("/usr/bin/oo-ssh #{gear} gear activate #{options[:deployment_id]} --as-json#{post_install_option} --no-rotation",
                                                     env: gear_env,
                                                     expected_exitstatus: 0)
 
             raise "No result JSON was received from the remote activate call" if out.nil? || out.empty?
 
             activate_result = HashWithIndifferentAccess.new(JSON.load(out))
+            raise "Invalid result JSON received from remote activate call - missing gear_results: #{activate_result.inspect}" unless activate_result.has_key?(:gear_results)
 
-            raise "Invalid result JSON received from remote activate call: #{activate_result.inspect}" unless activate_result.has_key?(:status)
+            gear_results = activate_result[:gear_results]
+            raise "Invalid result JSON received from remote activate call - missing gear_results[#{gear_uuid}]: #{activate_result.inspect}" unless gear_results.has_key?(gear_uuid)
 
-            result[:messages] += activate_result[:messages]
-            result[:errors] += activate_result[:errors]
-            result[:status] = activate_result[:status]
+            gear_result = gear_results[gear_uuid]
+            raise "Invalid result JSON received from remote activate call - missing gear_results[#{gear_uuid}][:status]: #{activate_result.inspect}" unless gear_result.has_key?(:status)
+
+            result[:messages] += gear_result[:messages]
+            result[:errors] += gear_result[:errors]
+            result[:status] = gear_result[:status]
           rescue Exception => e
             result[:errors] << "Gear activation failed: #{e.message}"
             result[:errors] += e.backtrace
@@ -956,16 +954,14 @@ module OpenShift
           gears = []
           if not options[:init] and proxy_cart
             if options[:all]
-              gears = gear_registry.entries[:web].values
+              gears = gear_registry.entries[:web].values.map(&:to_ssh_url)
             elsif options[:gears]
-              gears = gear_registry.entries[:web].values.select { |e| options[:gears].include?(e.uuid) }
+              gears = gear_registry.entries[:web].values.select { |e| options[:gears].include?(e.uuid) }.map(&:to_ssh_url)
             else
-              # it's possible the gear registry hasn't been populated yet (scale-up that adds a new proxy cart)
-              # so if gear_registry.entries[:web] is nil, just use [uuid] instead
-              gears = [gear_registry.entries[:web][uuid]] rescue [uuid]
+              gears = ["#{self.uuid}@localhost"]
             end
           else
-            gears = [uuid]
+            gears = ["#{self.uuid}@localhost"]
           end
 
           parallel_concurrency_ratio = options[:parallel_concurrency_ratio] || PARALLEL_CONCURRENCY_RATIO
@@ -973,8 +969,8 @@ module OpenShift
           batch_size = calculate_batch_size(gears.size, parallel_concurrency_ratio)
           threads = [batch_size, MAX_THREADS].min
 
-          parallel_output = Parallel.map(gears, :in_threads => threads) do |target_gear|
-            rotate_and_yield(target_gear, local_gear_env, options, &block)
+          parallel_output = Parallel.map(gears, :in_threads => threads) do |target_gear_ssh_url|
+            rotate_and_yield(target_gear_ssh_url, local_gear_env, options, &block)
           end
         end
 
@@ -986,7 +982,7 @@ module OpenShift
         #
         # Otherwise, just yields
         #
-        def rotate_and_yield(target_gear, local_gear_env, options, &block)
+        def rotate_and_yield(target_gear_ssh_url, local_gear_env, options, &block)
           result = HashWithIndifferentAccess.new({
             status: RESULT_FAILURE,
             messages: [],
@@ -995,7 +991,7 @@ module OpenShift
 
           proxy_cart = options[:proxy_cart]
 
-          target_gear_uuid = target_gear.is_a?(String) ? target_gear : target_gear.uuid
+          target_gear_uuid = target_gear_ssh_url.split('@')[0]
 
           if not options[:init] and options[:rotate] != false and proxy_cart and options[:hot_deploy] != true
             result[:messages] << "Rotating out gear in proxies"
@@ -1010,7 +1006,7 @@ module OpenShift
             end
           end
 
-          yield_result = yield(target_gear, local_gear_env, options)
+          yield_result = yield(target_gear_ssh_url, local_gear_env, options)
 
           # pull off the status, append messages and errors
           yield_status = yield_result.delete(:status)
@@ -1062,38 +1058,29 @@ module OpenShift
         #  }
         #
         def restart(cart_name, options={})
-          parallel_results = with_gear_rotation(options) do |target_gear, local_gear_env, options|
-            target_result = restart_gear(target_gear, local_gear_env, cart_name, options)
+          parallel_results = with_gear_rotation(options) do |target_gear_ssh_url, local_gear_env, options|
+            target_result = restart_gear(target_gear_ssh_url, local_gear_env, cart_name, options)
           end
 
-          if !!options[:all]
-            result = {
-              status: RESULT_SUCCESS,
-              gear_results: {}
-            }
+          result = { status: RESULT_SUCCESS, gear_results: {} }
 
-            parallel_results.each do |parallel_result|
-              target_gear_uuid = parallel_result[:target_gear_uuid]
-              result[:gear_results][target_gear_uuid] = parallel_result
+          parallel_results.each do |parallel_result|
+            target_gear_uuid = parallel_result[:target_gear_uuid]
+            result[:gear_results][target_gear_uuid] = parallel_result
 
-              result[:status] = RESULT_FAILURE unless parallel_result[:status] == RESULT_SUCCESS
-            end
-
-            return result
-          else
-            # options[:all] was false, so just return the first (and what should be the only) result
-            return parallel_results[0]
+            result[:status] = RESULT_FAILURE unless parallel_result[:status] == RESULT_SUCCESS
           end
+
+          return result
         end
 
         # Restarts a single cartridge in a single gear. If the gear is local, perform the restart
         # locally. Otherwise, SSH to the remote gear and invoke 'gear restart' to perform the
         # restart.
         #
-        # @param [String, OpenShift::Runtime::GearRegistry::Entry] target_gear the target gear to restart,
-        #   either a String (the uuid) or a GearRegistry Entry
-        def restart_gear(target_gear, local_gear_env, cart_name, options)
-          target_gear_uuid = target_gear.is_a?(String) ? target_gear : target_gear.uuid
+        # @param [String] target_gear the target gear to restart (SSH URL)
+        def restart_gear(target_gear_ssh_url, local_gear_env, cart_name, options)
+          target_gear_uuid = target_gear_ssh_url.split('@')[0]
 
           result = {
             status: RESULT_SUCCESS,
@@ -1111,19 +1098,27 @@ module OpenShift
                                                                    out: options[:out],
                                                                    err: options[:err])
             else
-              out, err, rc = run_in_container_context("/usr/bin/oo-ssh #{target_gear.to_ssh_url} gear restart --cart #{cart_name} --as-json",
+              out, err, rc = run_in_container_context("/usr/bin/oo-ssh #{target_gear_ssh_url} gear restart --cart #{cart_name} --as-json",
                                                       env: local_gear_env,
                                                       expected_exitstatus: 0)
 
               raise "No result JSON was received from the remote gear restart call" if out.nil? || out.empty?
 
-              result = HashWithIndifferentAccess.new(JSON.load(out))
+              remote_result = HashWithIndifferentAccess.new(JSON.load(out))
+              raise "Invalid result JSON received from remote gear restart call - missing gear_results: #{result.inspect}" unless remote_result.has_key?(:gear_results)
 
-              raise "Invalid result JSON received from remote gear restart call: #{result.inspect}" unless result.has_key?(:status)
+              gear_results = remote_result[:gear_results]
+              raise "Invalid result JSON received from remote gear restart call - missing gear_results[#{target_gear_uuid}]: #{result.inspect}" unless gear_results.has_key?(target_gear_uuid)
+
+              gear_result = gear_results[target_gear_uuid]
+              raise "Invalid result JSON received from remote gear restart call - missing gear_results[#{target_gear_uuid}][:status]: #{result.inspect}" unless gear_result.has_key?(:status)
+
+              result[:messages] += gear_result[:messages]
+              result[:errors] += gear_result[:errors]
+              result[:status] = gear_result[:status]
             end
           rescue => e
             result[:status] = RESULT_FAILURE
-            result[:errors] ||= []
             result[:errors] << "An exception occured restarting the gear: #{e.message}"
             result[:errors] += e.backtrace
           end
