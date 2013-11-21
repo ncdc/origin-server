@@ -629,3 +629,11 @@ command :'rotate-in' do |c|
     $stdout.puts(JSON.dump(result)) if options.as_json
   end
 end
+
+command :metrics do |c|
+  c.syntax = "#{name} metrics"
+  c.description = "Run gear metrics"
+  c.action do |args, options|
+    $stdout.puts @container.gear_metrics.to_json
+  end
+end

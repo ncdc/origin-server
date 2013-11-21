@@ -1528,6 +1528,12 @@ module OpenShift
         ApplicationRepository.new(@container).exists?
       end
 
+      def metrics(cartridge_name)
+        metrics_file = PathUtils.join(cartridge_directory(cartridge_name), 'metadata', 'metrics.yml')
+        return {} unless File.exist?(metrics_file)
+        YAML.load_file(metrics_file)
+      end
+
       private
       ## special methods that are handled especially by the platform
 

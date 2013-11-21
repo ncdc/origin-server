@@ -1610,6 +1610,109 @@ module OpenShift
 
           result
         end
+
+        def get_cgroups_single_metric(metric_name)
+          value = IO.readlines(PathUtils.join("/cgroup", "all", "openshift", self.uuid, metric_name))[0].chomp
+          { metric_name => value }
+        end
+
+        def get_cgroups_multivalue_metric(metric_name)
+          output = {}
+          values = IO.readlines(PathUtils.join("/cgroup", "all", "openshift", self.uuid, metric_name))[0].split(' ')
+          values.each_with_index do |value, index|
+            output["#{metric_name}.#{index}"] = value
+          end
+          output
+        end
+
+        def get_cgroups_kv_metric(metric_name)
+          output = {}
+          lines = IO.readlines(PathUtils.join("/cgroup", "all", "openshift", self.uuid, metric_name))
+          lines.each do |line|
+            key, value = line.split(' ')
+            output["#{metric_name}.#{key}"] = value
+          end
+          output
+        end
+
+        def gear_metrics
+          gear_env = ::OpenShift::Runtime::Utils::Environ.for_gear(@container_dir)
+
+          output = {
+            app_name: gear_env['OPENSHIFT_APP_NAME'],
+            gear_name: gear_env['OPENSHIFT_GEAR_NAME'],
+            namespace: gear_env['OPENSHIFT_NAMESPACE'],
+            app_uuid: gear_env['OPENSHIFT_APP_UUID'],
+            gear_uuid: gear_env['OPENSHIFT_GEAR_UUID'],
+            gear: {},
+            cartridges: {}
+          }
+
+          cgroups_single_metrics = %w(cpu.cfs_period_us
+                                      cpu.cfs_quota_us
+                                      cpu.rt_period_us
+                                      cpu.rt_runtime_us
+                                      cpu.shares
+                                      cpuacct.usage
+                                      freezer.state
+                                      memory.failcnt
+                                      memory.limit_in_bytes
+                                      memory.max_usage_in_bytes
+                                      memory.memsw.failcnt
+                                      memory.memsw.limit_in_bytes
+                                      memory.memsw.max_usage_in_bytes
+                                      memory.memsw.usage_in_bytes
+                                      memory.move_charge_at_immigrate
+                                      memory.soft_limit_in_bytes
+                                      memory.swappiness
+                                      memory.usage_in_bytes
+                                      memory.use_hierarchy
+                                      net_cls.classid
+                                      notify_on_release)
+
+          cgroups_kv_metrics = %w(cpu.stat
+                                  cpuacct.stat
+                                  memory.oom_control
+                                  memory.stat)
+
+          cgroups_multivalue_metrics = %w(cpuacct.usage_percpu)
+
+          cgroups_single_metrics.each do |metric|
+            output[:gear].merge!(get_cgroups_single_metric(metric))
+          end
+
+          cgroups_kv_metrics.each do |metric|
+            output[:gear].merge!(get_cgroups_kv_metric(metric))
+          end
+
+          cgroups_multivalue_metrics.each do |metric|
+            output[:gear].merge!(get_cgroups_multivalue_metric(metric))
+          end
+
+          @cartridge_model.each_cartridge do |cartridge|
+            name, software_version = @cartridge_model.map_cartridge_name(cartridge.name)
+            cartridge_metrics = @cartridge_model.metrics(cartridge.name)
+            cartridge_metrics.each_pair do |metric, script|
+              begin
+                script_output = @cartridge_model.cartridge_action(cartridge, script, software_version)
+
+                script_output.split("\n").each do |line|
+                  md = line.match(/^([^:]+):\s*(\S+)\s*$/)
+                  unless md.nil?
+                    key = md[1]
+                    value = md[2]
+                    output[:cartridges][cartridge.name][key] = value
+                  end
+                end
+
+              rescue ::OpenShift::Runtime::Utils::ShellExecutionException => e
+                logger.error "Error executing #{script}: #{e.message}"
+              end
+            end
+          end
+
+          output
+        end
       end
     end
   end

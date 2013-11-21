@@ -1,0 +1,15 @@
+#!/bin/bash
+
+source "/etc/openshift/node.conf"
+
+# for each gear
+  # call gear metrics
+  # send output to logstash
+
+function openshift_origin_users() {
+    grep ":${GEAR_GECOS}:" /etc/passwd | cut -d: -f1 | tr '\n' ' '
+}
+
+for u in $(openshift_origin_users); do
+  oo-su $u -c "gear metrics" | socat UNIX:/var/run/openshift/logstash.sock -
+done
