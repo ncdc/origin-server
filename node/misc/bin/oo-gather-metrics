@@ -1,15 +1,31 @@
-#!/bin/bash
+#!/usr/bin/env oo-ruby
+#--
+# Copyright 2013 Red Hat, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#++
 
-source "/etc/openshift/node.conf"
+require 'rubygems'
+require 'json'
+require 'openshift-origin-node/model/application_container'
+require 'openshift-origin-node/utils/node_logger'
 
-# for each gear
-  # call gear metrics
-  # send output to logstash
+# Don't buffer output to the client
 
-function openshift_origin_users() {
-    grep ":${GEAR_GECOS}:" /etc/passwd | cut -d: -f1 | tr '\n' ' '
-}
+STDOUT.sync = true
+STDERR.sync = true
+OpenShift::Runtime::NodeLogger.disable
 
-for u in $(openshift_origin_users); do
-  oo-su $u -c "gear metrics" | socat UNIX:/var/run/openshift/logstash.sock -
-done
+OpenShift::Runtime::ApplicationContainer.all.each do |container|
+    puts container.gear_metrics.to_json
+end
