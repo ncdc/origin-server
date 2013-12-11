@@ -9,14 +9,10 @@ class LogStash::Inputs::Cgroups < LogStash::Inputs::Base
 
   default :codec, "plain"
 
-  # Iterates through all Gear UUIDs and does cgget for each gear
-  config :all, :validate => :boolean, :default => true
-
   # Interval to get cgroup data
   config :interval, :validate => :number, :required => true
 
-  # If not using all, path will be used
-  config :path, :validate => :string, :required => false
+  attr_reader :host, :cgroups_single_metrics, :cgroups_kv_metrics, :cgroups_multivalue_metrics
 
   def register
     @host = Socket.gethostname
@@ -60,17 +56,12 @@ class LogStash::Inputs::Cgroups < LogStash::Inputs::Base
       begin
         gear_gecos = `grep "GEAR_GECOS" /etc/openshift/node.conf | cut -d = -f 2 | cut -d '#' -f 1`.strip.gsub(/\"/, '')
         gear_uuids = `grep ":#{gear_gecos}:" /etc/passwd | cut -d: -f1`.split("\n")
+
         start = Time.now
-        if @all
-          #TODO use threads?
-          gear_uuids.each do |uuid|
-            cgroup_name = "/openshift/#{uuid}"
-            output = get_cgroup_metrics(cgroup_name)
-            push_to_queue(queue, output, uuid)
-          end
-        else
-          output = get_cgroup_metrics(@path)
-          push_to_queue(queue, output, nil)
+
+        #TODO use threads?
+        gear_uuids.each do |uuid|
+          processor = CgroupProcessor.new(self, uuid, queue).process_gear
         end
 
         duration = Time.now - start
@@ -88,58 +79,66 @@ class LogStash::Inputs::Cgroups < LogStash::Inputs::Base
     finished
   end
 
-  private
-  def push_to_queue(queue, output, uuid)
-    output.each_with_index do |line, index|
-      @codec.decode(line) do |event|
-        decorate(event)
-        event["host"] = @host
-        event["gear_uuid"] = uuid
-        queue << event
+  def enqueue(uuid, key, value, queue)
+    event = LogStash::Event.new
+    decorate(event)
+    event["host"] = @host
+    event["gear_uuid"] = uuid
+    event[key] = value
+    queue << event
+  end
+
+  class CgroupProcessor
+    def initialize(plugin, uuid, queue)
+      @plugin = plugin
+      @uuid = uuid
+      @path = "/openshift/#{uuid}"
+      @queue = queue
+    end
+
+    def process_gear
+      get_cgroups_single_metrics
+      get_cgroups_kv_metrics
+      get_cgroups_multivalue_metrics
+    end
+
+    def get_cgroups_single_metrics
+      metrics_path = @plugin.cgroups_single_metrics.join(" -r ")
+      retrieved_values = `cgget -n -v -r #{metrics_path} #{@path}`.split("\n")
+      retrieved_values.each_with_index do |value, index|
+        enqueue(@plugin.cgroups_single_metrics[index], value)
       end
     end
-  end
 
-  def get_cgroup_metrics(path)
-    output = []
-    output.concat(get_cgroups_single_metric(@cgroups_single_metrics, path))
-
-    @cgroups_kv_metrics.each do |metric|
-      output.concat(get_cgroups_kv_metric(metric, path))
+    def get_cgroups_kv_metrics
+      @plugin.cgroups_kv_metrics.each do |metric|
+        get_cgroups_kv_metric(metric)
+      end
     end
 
-    @cgroups_multivalue_metrics.each do |metric|
-      output.concat(get_cgroups_multivalue_metric(metric, path))
+    def get_cgroups_kv_metric(metric_name)
+      lines = `cgget -n -v -r #{metric_name} #{@path}`.split("\n")
+      lines.each do |line|
+        key, value = line.split(' ')
+        enqueue("#{metric_name}.#{key}", value)
+      end
     end
-    output
-  end
 
-  def get_cgroups_single_metric(metrics, path)
-    output = []
-    metrics_path = metrics.join(" -r ")
-    retrieved_values = `cgget -n -v -r #{metrics_path} #{path}`.split("\n")
-    retrieved_values.each_with_index do |value, index|
-      output.push("#{metrics[index]}=#{value}")
+    def get_cgroups_multivalue_metrics
+      @plugin.cgroups_multivalue_metrics.each do |metric|
+        get_cgroups_multivalue_metric(metric)
+      end
     end
-    output
-  end
 
-  def get_cgroups_multivalue_metric(metric_name, path)
-    output = []
-    values = `cgget -n -v -r #{metric_name} #{path}`.split(' ')
-    values.each_with_index do |value, index|
-      output.push("#{metric_name}=#{value}")
+    def get_cgroups_multivalue_metric(metric_name)
+      values = `cgget -n -v -r #{metric_name} #{@path}`.split(' ')
+      values.each_with_index do |value, index|
+        enqueue("#{metric_name}.#{index}", value)
+      end
     end
-    output
-  end
 
-  def get_cgroups_kv_metric(metric_name, path)
-    output = []
-    lines = `cgget -n -v -r #{metric_name} #{path}`.split("\n")
-    lines.each do |line|
-      key, value = line.split(' ')
-      output.push("#{metric_name}.#{key}=#{value}")
+    def enqueue(key, value)
+      @plugin.enqueue(@uuid, key, value, @queue)
     end
-    output
   end
 end
