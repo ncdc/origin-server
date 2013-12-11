@@ -66,11 +66,11 @@ class LogStash::Inputs::Cgroups < LogStash::Inputs::Base
           gear_uuids.each do |uuid|
             cgroup_name = "/openshift/#{uuid}"
             output = get_cgroup_metrics(cgroup_name)
-            push_to_queue(queue, hostname, output, uuid)
+            push_to_queue(queue, output, uuid)
           end
         else
           output = get_cgroup_metrics(@path)
-          push_to_queue(queue, hostname, output, nil)
+          push_to_queue(queue, output, nil)
         end
 
         duration = Time.now - start
@@ -89,7 +89,7 @@ class LogStash::Inputs::Cgroups < LogStash::Inputs::Base
   end
 
   private
-  def push_to_queue(queue, hostname, output, uuid)
+  def push_to_queue(queue, output, uuid)
     output.each_with_index do |line, index|
       @codec.decode(line) do |event|
         decorate(event)
