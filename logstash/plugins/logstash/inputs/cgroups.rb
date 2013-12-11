@@ -59,9 +59,10 @@ class LogStash::Inputs::Cgroups < LogStash::Inputs::Base
 
         start = Time.now
 
+        processor = CgroupProcessor.new(self, queue)
         #TODO use threads?
         gear_uuids.each do |uuid|
-          processor = CgroupProcessor.new(self, uuid, queue).process_gear
+          processor.process_gear(uuid)
         end
 
         duration = Time.now - start
@@ -89,14 +90,14 @@ class LogStash::Inputs::Cgroups < LogStash::Inputs::Base
   end
 
   class CgroupProcessor
-    def initialize(plugin, uuid, queue)
+    def initialize(plugin, queue)
       @plugin = plugin
-      @uuid = uuid
-      @path = "/openshift/#{uuid}"
       @queue = queue
     end
 
-    def process_gear
+    def process_gear(uuid)
+      @uuid = uuid
+      @path = "/openshift/#{uuid}"
       get_cgroups_single_metrics
       get_cgroups_kv_metrics
       get_cgroups_multivalue_metrics
