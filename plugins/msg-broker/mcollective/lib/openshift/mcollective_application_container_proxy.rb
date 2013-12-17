@@ -3,6 +3,9 @@ require 'open-uri'
 require 'timeout'
 require 'json'
 require 'stomp'
+require 'active_support/hash_with_indifferent_access'
+require 'active_support/core_ext/hash'
+
 
 include MCollective::RPC
 
@@ -2669,11 +2672,14 @@ module OpenShift
           if action == 'app-create'
             result = nil
             received_reply = false
-            StompClient.instance.subscribe("/queue/node.#{@id}.reply", {:ack => 'client', 'activemq.prefetchSize' => 1}) do |msg|
-              result = JSON.load(msg.body)
+            StompClient.instance.subscribe("/queue/mcollective.node.#{@id}.reply", {:ack => 'client', 'activemq.prefetchSize' => 1}) do |stomp_msg|
+              result = HashWithIndifferentAccess.new(JSON.load(stomp_msg.body))
+              Rails.logger.info("HACKDAY: AMQ msg: #{stomp_msg}")
+              Rails.logger.info("HACKDAY: AMQ body: #{stomp_msg.body}")
+              Rails.logger.info("HACKDAY: AMQ result hash: #{result}")
               received_reply = true
             end
-            StompClient.instance.publish("/queue/node.#{@id}.request", JSON.dump(mc_args), {:peristent => true})
+            StompClient.instance.publish("/queue/mcollective.node.#{@id}.request", JSON.dump(mc_args), {:persistent => true})
             while !received_reply
               sleep 1
             end
@@ -2713,6 +2719,17 @@ module OpenShift
       def parse_result(mcoll_reply, gear=nil, command=nil)
         app = gear.application unless gear.nil?
         result = ResultIO.new
+
+        if mcoll_reply.respond_to?(:has_key?)
+          Rails.logger.info("HACKDAY: Processing reply as an AMQ response")
+          gear_id = gear.nil? ? nil : gear.uuid
+          result.exitcode = mcoll_reply["exitcode"]
+          result.parse_output(mcoll_reply["output"], gear_id)
+          if mcoll_result[:addtl_params]
+            result.deployments = mcoll_result[:addtl_params][:deployments]
+          end
+          return result
+        end
 
         mcoll_result = mcoll_reply ? mcoll_reply[0] : nil
         output = nil

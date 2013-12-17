@@ -100,8 +100,13 @@ module OpenShift
 
           action = content['action'].gsub('-', '_')
           args = content['args']
-          result = self.send(action, args)
+          exitcode, output = self.send(action, args)
 
+          result = {
+            'exitcode' => exitcode,
+            'output' => output
+          }
+          puts "Sending reply hash: #{result}"
           @client.publish(@reply_queue, JSON.dump(result), {:persistent => true})
           @client.acknowledge(msg)
 
@@ -115,12 +120,9 @@ module OpenShift
   end
 end
 
-request_queue = "/queue/#{ARGV[0]}"
-reply_queue = "/queue/#{ARGV[1]}"
-
-if (!request_queue || !reply_queue)
-  puts "node_agent.rb <request_queue> <reply_queue>"
-end
+hostname = `hostname`.strip
+request_queue = "/queue/mcollective.node.#{hostname}.request"
+reply_queue = "/queue/mcollective.node.#{hostname}.reply"
 
 pid = $$
 FileUtils.mkdir_p('/tmp/oo-hackday')
