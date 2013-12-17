@@ -94,10 +94,12 @@ module OpenShift
 
         msg_count = 0
         @client.subscribe(@request_queue, { :ack => "client", "activemq.prefetchSize" => 1 }) do |msg|
+          puts "Got a message: #{msg}"
           content = JSON.load(msg.body)
+          puts "Got message: #{content}"
 
-          action = content[:action].gsub('-', '_')
-          args = content[:args]
+          action = content['action'].gsub('-', '_')
+          args = content['args']
           result = self.send(action, args)
 
           @client.publish(@reply_queue, JSON.dump(result), {:persistent => true})
@@ -113,8 +115,8 @@ module OpenShift
   end
 end
 
-request_queue = ARGV[0]
-reply_queue = ARGV[1]
+request_queue = "/queue/#{ARGV[0]}"
+reply_queue = "/queue/#{ARGV[1]}"
 
 if (!request_queue || !reply_queue)
   puts "node_agent.rb <request_queue> <reply_queue>"

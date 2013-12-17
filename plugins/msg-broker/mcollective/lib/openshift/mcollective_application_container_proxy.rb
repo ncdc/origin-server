@@ -2667,11 +2667,13 @@ module OpenShift
         begin
           Rails.logger.debug "DEBUG: rpc_client.custom_request('cartridge_do', #{mc_args.inspect}, #{@id}, {'identity' => #{@id}}) (Request ID: #{Thread.current[:user_action_log_uuid]})"
           if action == 'app-create'
-            StompClient.instance.publish("node.#{@id}.request", JSON.dump(mc_args), {:peristent => true})
+            result = nil
             received_reply = false
-            StompClient.instance.subscribe("node.#{@id}.reply", {:ack => 'client', 'activemq.prefetchSize' => 1}) do |msg|
+            StompClient.instance.subscribe("/queue/node.#{@id}.reply", {:ack => 'client', 'activemq.prefetchSize' => 1}) do |msg|
               result = JSON.load(msg.body)
+              received_reply = true
             end
+            StompClient.instance.publish("/queue/node.#{@id}.request", JSON.dump(mc_args), {:peristent => true})
             while !received_reply
               sleep 1
             end
