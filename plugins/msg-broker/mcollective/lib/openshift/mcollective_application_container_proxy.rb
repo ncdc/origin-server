@@ -3,6 +3,8 @@ require 'open-uri'
 require 'timeout'
 require 'json'
 require 'stomp'
+require 'active_support/hash_with_indifferent_access'
+require 'active_support/core_ext/hash'
 
 include MCollective::RPC
 
@@ -2670,7 +2672,10 @@ module OpenShift
             result = nil
             received_reply = false
             StompClient.instance.subscribe("/queue/node.#{@id}.reply", {:ack => 'client', 'activemq.prefetchSize' => 1}) do |msg|
-              result = JSON.load(msg.body)
+              result = HashWithIndifferentAccess.new(JSON.load(msg.body))
+              Rails.logger.info("HACKDAY: msg: #{msg}")
+              Rails.logger.info("HACKDAY: body: #{msg.body}")
+              Rails.logger.info("HACKDAY: result: #{result}")
               received_reply = true
             end
             StompClient.instance.publish("/queue/node.#{@id}.request", JSON.dump(mc_args), {:peristent => true})
@@ -2713,6 +2718,17 @@ module OpenShift
       def parse_result(mcoll_reply, gear=nil, command=nil)
         app = gear.application unless gear.nil?
         result = ResultIO.new
+
+        if mcoll_reply.respond_to?(:has_key?)
+          Rails.logger.info("HACKDAY: Processing reply as an AMQ response")
+          gear_id = gear.nil? ? nil : gear.uuid
+          result.exitcode = mcoll_reply["exitcode"]
+          result.parse_output(mcoll_reply["output"], gear_id)
+          #if mcoll_result[:addtl_params]
+          #  result.deployments = mcoll_result[:addtl_params][:deployments]
+          #end
+          return result
+        end
 
         mcoll_result = mcoll_reply ? mcoll_reply[0] : nil
         output = nil

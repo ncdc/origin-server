@@ -100,7 +100,13 @@ module OpenShift
 
           action = content['action'].gsub('-', '_')
           args = content['args']
-          result = self.send(action, args)
+          exitcode, output = self.send(action, args)
+          result = {
+            'exitcode' => exitcode,
+            'output' => output
+          }
+
+          puts "Sending reply hash: #{result}"
 
           @client.publish(@reply_queue, JSON.dump(result), {:persistent => true})
           @client.acknowledge(msg)
