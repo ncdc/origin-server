@@ -1,6 +1,8 @@
 require 'mcollective'
 require 'open-uri'
 require 'timeout'
+require 'json'
+require 'stomp'
 
 include MCollective::RPC
 
@@ -16,6 +18,16 @@ module OpenShift
     # to broker/node communications.
     #
     class MCollectiveApplicationContainerProxy < OpenShift::ApplicationContainerProxy
+      class StompClient
+        def self.instance
+          @@instance ||= create_instance
+        end
+
+        def self.create_instance
+          opts = { hosts: [ { login: "mcollective", passcode: "marionette", host: "localhost", port: 6163 } ] }
+          Stomp::Client.new(opts)
+        end
+      end
 
       # the "cartridge" for Node operation messages to "cartridge_do"
       @@C_CONTROLLER = 'openshift-origin-node'
@@ -2654,7 +2666,18 @@ module OpenShift
         result = nil
         begin
           Rails.logger.debug "DEBUG: rpc_client.custom_request('cartridge_do', #{mc_args.inspect}, #{@id}, {'identity' => #{@id}}) (Request ID: #{Thread.current[:user_action_log_uuid]})"
-          result = rpc_client.custom_request('cartridge_do', mc_args, @id, {'identity' => @id})
+          if action == 'app-create'
+            StompClient.instance.publish("node.#{@id}.request", JSON.dump(mc_args), {:peristent => true})
+            received_reply = false
+            StompClient.instance.subscribe("node.#{@id}.reply", {:ack => 'client', 'activemq.prefetchSize' => 1}) do |msg|
+              result = JSON.load(msg.body)
+            end
+            while !received_reply
+              sleep 1
+            end
+          else
+            result = rpc_client.custom_request('cartridge_do', mc_args, @id, {'identity' => @id})
+          end
           Rails.logger.debug "DEBUG: #{mask_user_creds(result.inspect)} (Request ID: #{Thread.current[:user_action_log_uuid]})" if log_debug_output
         rescue => e
           Rails.logger.error("Error processing custom_request for action #{action}: #{e.message}")
