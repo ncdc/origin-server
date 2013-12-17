@@ -1802,7 +1802,7 @@ module OpenShift
         start_order, stop_order = app.calculate_component_orders
         source_container = gear.get_proxy
         start_order.each do |cinst|
-          next unless gear_components.include? cinst 
+          next unless gear_components.include? cinst
           cart = cinst.cartridge_name
           idle, leave_stopped = state_map[cart]
           unless leave_stopped
@@ -1853,7 +1853,7 @@ module OpenShift
         app.update_proxy_status(action: :disable, gear_uuid: gear.uuid) if app.scalable
 
         stop_order.each { |cinst|
-          next unless gear_comps.include? cinst 
+          next unless gear_comps.include? cinst
           cart = cinst.cartridge_name
           idle, leave_stopped = state_map[cart]
           # stop the cartridge if it needs to
@@ -2671,14 +2671,14 @@ module OpenShift
           if action == 'app-create'
             result = nil
             received_reply = false
-            StompClient.instance.subscribe("/queue/node.#{@id}.reply", {:ack => 'client', 'activemq.prefetchSize' => 1}) do |msg|
-              result = HashWithIndifferentAccess.new(JSON.load(msg.body))
-              Rails.logger.info("HACKDAY: msg: #{msg}")
-              Rails.logger.info("HACKDAY: body: #{msg.body}")
-              Rails.logger.info("HACKDAY: result: #{result}")
+            StompClient.instance.subscribe("/queue/mcollective.node.#{@id}.reply", {:ack => 'client', 'activemq.prefetchSize' => 1}) do |stomp_msg|
+              result = HashWithIndifferentAccess.new(JSON.load(stomp_msg.body))
+              Rails.logger.info("HACKDAY: AMQ msg: #{stomp_msg}")
+              Rails.logger.info("HACKDAY: AMQ body: #{stomp_msg.body}")
+              Rails.logger.info("HACKDAY: AMQ result hash: #{result}")
               received_reply = true
             end
-            StompClient.instance.publish("/queue/node.#{@id}.request", JSON.dump(mc_args), {:peristent => true})
+            StompClient.instance.publish("/queue/mcollective.node.#{@id}.request", JSON.dump(mc_args), {:persistent => true})
             while !received_reply
               sleep 1
             end
