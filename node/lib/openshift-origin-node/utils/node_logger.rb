@@ -21,6 +21,7 @@ require 'openshift-origin-node/utils/logger/split_trace_logger'
 require 'openshift-origin-node/utils/logger/null_logger'
 require 'openshift-origin-node/utils/logger/stdout_logger'
 require 'openshift-origin-node/utils/logger/stderr_logger'
+require 'openshift-origin-node/utils/logger/syslog_logger'
 
 module OpenShift
   module Runtime
