@@ -1,0 +1,4 @@
+$ModLoad imuxsock
+$SystemLogSocketName /var/lib/openshift/<%= ENV['OPENSHIFT_GEAR_UUID'] %>/.syslog/syslog.sock
+$template OpenShift,"%TIMESTAMP:::date-rfc3339% %HOSTNAME% app=<%= ENV['OPENSHIFT_GEAR_UUID'] %> gear=<%= ENV['OPENSHIFT_GEAR_UUID'] %> %syslogtag%%msg:::sp-if-no-1st-sp%%msg:::drop-last-lf%\n"
+*.* /var/lib/openshift/<%= ENV['OPENSHIFT_GEAR_UUID'] %>/.syslog/gear.log;OpenShift

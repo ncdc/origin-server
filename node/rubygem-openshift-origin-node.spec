@@ -228,6 +228,7 @@ fi
 %attr(0744,-,-) %{openshift_lib}/cartridge_sdk/ruby/*
 %dir /etc/openshift
 %config(noreplace) /etc/openshift/node.conf
+%config(noreplace) /etc/openshift/syslog_gear.conf.erb
 %attr(0600,-,-) %config(noreplace) /etc/openshift/iptables.filter.rules
 %attr(0600,-,-) %config(noreplace) /etc/openshift/iptables.nat.rules
 %config(noreplace) /etc/openshift/env/*

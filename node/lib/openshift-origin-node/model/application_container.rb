@@ -220,6 +220,28 @@ module OpenShift
             end
           end
 
+          if @config.get("GEAR_SYSLOG_ENABLED").to_i == 1
+            syslog_template = @config.get("GEAR_SYSLOG_TEMPLATE_ERB")
+
+            syslog_dir = PathUtils.join(@container_dir, '.syslog')
+            FileUtils.mkdir(syslog_dir)
+
+            syslog_conf = PathUtils.join(syslog_dir, 'syslog.conf')
+            syslog_pid = PathUtils.join(syslog_dir, 'syslog.pid')
+            gear_env = ::OpenShift::Runtime::Utils::Environ::for_gear(@container_dir)
+
+            ::OpenShift::Runtime::Utils::oo_spawn(%Q{/usr/bin/oo-erb -S 2 -- #{syslog_template} > #{syslog_conf}},
+                                                  env:                 gear_env,
+                                                  chdir:               @container_dir,
+                                                  timeout:             @hourglass.remaining,
+                                                  expected_exitstatus: 0)
+
+            ::OpenShift::Runtime::Utils::oo_spawn("nohup /sbin/rsyslogd -c5 -f #{syslog_conf} -i #{syslog_pid} 2>&1 >/dev/null &",
+                                                  env:                 gear_env,
+                                                  chdir:               @container_dir,
+                                                  expected_exitstatus: 0)
+          end
+
           uuid_lock.flock(File::LOCK_UN)
         end
 
@@ -262,6 +284,15 @@ module OpenShift
           output, errout, retcode = @cartridge_model.destroy(skip_hooks)
 
           raise UserDeletionException.new("ERROR: unable to delete user account #{@uuid}") if @uuid.nil?
+
+          if @config.get("GEAR_SYSLOG_ENABLED").to_i == 1
+            syslog_dir = PathUtils.join(@container_dir, '.syslog')
+            syslog_pid = PathUtils.join(syslog_dir, 'syslog.pid')
+            if File.exist?(syslog_pid)
+              pid = IO.readlines(syslog_pid)[0].chomp.to_i
+              Process.kill("TERM", pid)
+            end
+          end
 
           @container_plugin.destroy
 
