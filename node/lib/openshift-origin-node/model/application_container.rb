@@ -221,6 +221,11 @@ module OpenShift
           end
 
           if @config.get("GEAR_SYSLOG_ENABLED").to_i == 1
+            syslog_ip = @cartridge_model.find_open_ip(514)
+            raise "Unable to allocate IP for syslog for gear #{self.uuid}" if syslog_ip.nil?
+            add_env_var('OPENSHIFT_SYSLOG_IP', syslog_ip)
+            add_env_var('OPENSHIFT_SYSLOG_PORT', 514)
+
             syslog_template = @config.get("GEAR_SYSLOG_TEMPLATE_ERB")
 
             syslog_dir = PathUtils.join(@container_dir, '.syslog')
@@ -286,6 +291,8 @@ module OpenShift
           raise UserDeletionException.new("ERROR: unable to delete user account #{@uuid}") if @uuid.nil?
 
           if @config.get("GEAR_SYSLOG_ENABLED").to_i == 1
+            remove_env_var('OPENSHIFT_SYSLOG_IP')
+            remove_env_var('OPENSHIFT_SYSLOG_PORT')
             syslog_dir = PathUtils.join(@container_dir, '.syslog')
             syslog_pid = PathUtils.join(syslog_dir, 'syslog.pid')
             if File.exist?(syslog_pid)

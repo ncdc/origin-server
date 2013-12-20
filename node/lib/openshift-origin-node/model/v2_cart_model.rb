@@ -971,6 +971,9 @@ module OpenShift
 
         allocated_ips = []
 
+        syslog_ip = env['OPENSHIFT_SYSLOG_IP']
+        allocated_ips << syslog_ip unless syslog_ip.nil?
+
         # Collect all existing endpoint IP allocations
         process_cartridges do |cart_path|
           cart_dir = File.basename(cart_path)
