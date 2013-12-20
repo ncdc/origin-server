@@ -91,7 +91,7 @@ cp %{buildroot}/%{gem_instdir}/conf/openshift-origin-frontend-apache-mod-rewrite
 
 # Create empty route database files
 mkdir -p %{buildroot}%{appdir}/.httpd.d
-for map in nodes aliases idler sts
+for map in nodes aliases idler sts gearinfo
 do
     mapf="%{buildroot}%{appdir}/.httpd.d/${map}"
     touch "${mapf}.txt"
@@ -124,10 +124,12 @@ mv httpd/frontend-mod-rewrite-https-template.erb %{buildroot}%{appdir}/.httpd.d/
 %attr(0640,root,apache) %config(noreplace) %{appdir}/.httpd.d/aliases.txt
 %attr(0640,root,apache) %config(noreplace) %{appdir}/.httpd.d/idler.txt
 %attr(0640,root,apache) %config(noreplace) %{appdir}/.httpd.d/sts.txt
+%attr(0640,root,apache) %config(noreplace) %{appdir}/.httpd.d/gearinfo.txt
 %attr(0750,root,apache) %config(noreplace) %{appdir}/.httpd.d/nodes.db
 %attr(0750,root,apache) %config(noreplace) %{appdir}/.httpd.d/aliases.db
 %attr(0750,root,apache) %config(noreplace) %{appdir}/.httpd.d/idler.db
 %attr(0750,root,apache) %config(noreplace) %{appdir}/.httpd.d/sts.db
+%attr(0750,root,apache) %config(noreplace) %{appdir}/.httpd.d/gearinfo.db
 /etc/openshift/node-plugins.d/
 
 %changelog

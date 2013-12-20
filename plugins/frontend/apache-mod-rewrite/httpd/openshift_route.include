@@ -17,10 +17,11 @@ RewriteLogLevel 0
 
 # Maps
 RewriteMap    lowercase int:tolower
-RewriteMap      openshift-nodes   dbm=db:/var/lib/openshift/.httpd.d/nodes.db
-RewriteMap      openshift-aliases dbm=db:/var/lib/openshift/.httpd.d/aliases.db
-RewriteMap      openshift-idler   dbm=db:/var/lib/openshift/.httpd.d/idler.db
-RewriteMap      openshift-sts     dbm=db:/var/lib/openshift/.httpd.d/sts.db
+RewriteMap      openshift-nodes    dbm=db:/var/lib/openshift/.httpd.d/nodes.db
+RewriteMap      openshift-aliases  dbm=db:/var/lib/openshift/.httpd.d/aliases.db
+RewriteMap      openshift-idler    dbm=db:/var/lib/openshift/.httpd.d/idler.db
+RewriteMap      openshift-sts      dbm=db:/var/lib/openshift/.httpd.d/sts.db
+RewriteMap      openshift-gearinfo dbm=db:/var/lib/openshift/.httpd.d/gearinfo.db
 
 # Set X-Request-Start header to allow checking request life cycle.
 RequestHeader set X-Request-Start "%t"
@@ -36,7 +37,7 @@ RequestHeader set X-Client-IP %{X_CLIENT_IP}e
 RewriteCond ${lowercase:%{HTTP_HOST}} ^([^:]+)
 RewriteCond ${openshift-aliases:%1} ^(.+)$    [OR]
 RewriteCond ${lowercase:%{HTTP_HOST}} ^([^:]+)
-RewriteRule ^.*$ - [E=V_MATCH_HOST:%1,NS]
+RewriteRule ^.*$ - [E=V_MATCH_HOST:%1,E=GEAR_UUID:${openshift-gearinfo:%1},NS]
 
 # Provides the ability to override the HTTP_HOST header
 # by letting a client set the X-OpenShift-Host header
@@ -202,5 +203,5 @@ ProxyPassReverse ${V_MATCH_PATH} http://${V_ROUTE} interpolate
 #
 # Log custom format for OpenShift parsing.
 # Log format is:
-LogFormat "%h %{V_MATCH_HOST}e %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" (%Dus) %X %{V_ROUTE}e%{V_PATH}e" openshift
+LogFormat "%h %{V_MATCH_HOST}e gear=%{GEAR_UUID}e %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\" (%Dus) %X %{V_ROUTE}e%{V_PATH}e" openshift
 CustomLog logs/openshift_log openshift env=V_PATH
