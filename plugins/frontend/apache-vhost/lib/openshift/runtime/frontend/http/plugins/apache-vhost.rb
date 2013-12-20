@@ -41,11 +41,11 @@ module OpenShift
 
             attr_reader :basedir, :token, :app_path
 
-            def initialize(container_uuid, fqdn, container_name, namespace)
+            def initialize(application_uuid, container_uuid, fqdn, container_name, namespace)
               @config = ::OpenShift::Config.new
               @basedir = @config.get("OPENSHIFT_HTTP_CONF_DIR")
 
-              super(container_uuid, fqdn, container_name, namespace)
+              super(application_uuid, container_uuid, fqdn, container_name, namespace)
 
               @token = "#{@container_uuid}_#{@namespace}_#{@container_name}"
               @app_path = File.join(@basedir, token)

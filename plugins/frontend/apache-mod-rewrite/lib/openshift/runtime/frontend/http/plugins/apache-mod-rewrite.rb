@@ -37,11 +37,11 @@ module OpenShift
 
             TEMPLATE_HTTPS = "frontend-mod-rewrite-https-template.erb"
 
-            def initialize(container_uuid, fqdn, container_name, namespace)
+            def initialize(application_uuid, container_uuid, fqdn, container_name, namespace)
               @config = ::OpenShift::Config.new
               @basedir = @config.get("OPENSHIFT_HTTP_CONF_DIR")
 
-              super(container_uuid, fqdn, container_name, namespace)
+              super(application_uuid, container_uuid, fqdn, container_name, namespace)
 
               @template_https = File.join(@basedir, TEMPLATE_HTTPS)
             end
@@ -79,7 +79,7 @@ module OpenShift
 
             def connect(*elements)
               ApacheDBGearInfo.open(ApacheDBGearInfo::WRCREAT) do |d|
-                d.store(@fqdn, @container_uuid)
+                d.store(@fqdn, "#{@application_uuid},#{@container_uuid}")
               end
 
               reported_urls = []

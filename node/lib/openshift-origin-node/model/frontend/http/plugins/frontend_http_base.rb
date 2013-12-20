@@ -70,9 +70,10 @@ module OpenShift
             SERVER_HTTPS_PORT = 443
             SERVER_CONNECT_ADDR = '127.0.0.1'
 
-            attr_reader :container_uuid, :fqdn, :container_name, :namespace
+            attr_reader :application_uuid, :container_uuid, :fqdn, :container_name, :namespace
 
-            def initialize(container_uuid, fqdn, container_name, namespace)
+            def initialize(application_uuid, container_uuid, fqdn, container_name, namespace)
+              @application_uuid = application_uuid
               @container_uuid = container_uuid
               @fqdn = fqdn
               @container_name = container_name
