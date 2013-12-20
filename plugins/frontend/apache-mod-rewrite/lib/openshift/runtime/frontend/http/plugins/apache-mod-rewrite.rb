@@ -25,6 +25,7 @@ $OpenShift_ApacheDBNodes_Lock = Mutex.new
 $OpenShift_ApacheDBAliases_Lock = Mutex.new
 $OpenShift_ApacheDBIdler_Lock = Mutex.new
 $OpenShift_ApacheDBSTS_Lock = Mutex.new
+$OpenShift_ApacheDBGearInfo_Lock = Mutex.new
 
 module OpenShift
   module Runtime
@@ -50,6 +51,7 @@ module OpenShift
               ApacheDBAliases.open(ApacheDBAliases::WRCREAT) { |d| d.delete_if { |k, v| v == fqdn } }
               ApacheDBIdler.open(ApacheDBIdler::WRCREAT)     { |d| d.delete(fqdn) }
               ApacheDBSTS.open(ApacheDBSTS::WRCREAT)         { |d| d.delete(fqdn) }
+              ApacheDBGearInfo.open(ApacheDBGearInfo::WRCREAT) { |d| d.delete(fqdn) }
             end
 
             def self.purge_by_uuid(uuid)
@@ -76,6 +78,10 @@ module OpenShift
             end
 
             def connect(*elements)
+              ApacheDBGearInfo.open(ApacheDBGearInfo::WRCREAT) do |d|
+                d.store(@fqdn, @container_uuid)
+              end
+
               reported_urls = []
               ApacheDBNodes.open(ApacheDBNodes::WRCREAT) do |d|
                 elements.each do |path, uri, options|
@@ -156,6 +162,10 @@ module OpenShift
                 paths.flatten.each do |p|
                   d.delete(@fqdn + p.to_s)
                 end
+              end
+
+              ApacheDBGearInfo.open(ApacheDBGearInfo::WRCREAT) do |d|
+                d.delete(@fqdn)
               end
             end
 
@@ -326,6 +336,11 @@ module OpenShift
           class ApacheDBSTS < ::OpenShift::Runtime::Frontend::Http::Plugins::ApacheDB
             self.MAPNAME = "sts"
             self.LOCK = $OpenShift_ApacheDBSTS_Lock
+          end
+
+          class ApacheDBGearInfo < ::OpenShift::Runtime::Frontend::Http::Plugins::ApacheDB
+            self.MAPNAME = "gearinfo"
+            self.LOCK = $OpenShift_ApacheDBGearInfo_Lock
           end
 
         end
