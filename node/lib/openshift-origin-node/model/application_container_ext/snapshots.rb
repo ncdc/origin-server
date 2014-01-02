@@ -121,7 +121,7 @@ module OpenShift
           end
 
           result = {
-            status: RESULT_FAILURE
+            status: ::OpenShift::Runtime::ApplicationContainer::RESULT_FAILURE
           }
 
           gear_env = ::OpenShift::Runtime::Utils::Environ.for_gear(@container_dir)
@@ -178,13 +178,13 @@ module OpenShift
               options[:err] = $stderr
 
               distribute_result = result[:distribute_result] = distribute(options)
-              return result unless distribute_result[:status] == RESULT_SUCCESS
+              return result unless distribute_result[:status] == ::OpenShift::Runtime::ApplicationContainer::RESULT_SUCCESS
 
               options[:all] = true
               options[:restore] = true
 
               activate_result = result[:activate_result] = activate(options)
-              return result unless activate_result[:status] == RESULT_SUCCESS
+              return result unless activate_result[:status] == ::OpenShift::Runtime::ApplicationContainer::RESULT_SUCCESS
             else
               pre_receive(err: $stderr, out: $stdout, ref: 'master', hot_deploy: false, force_clean_build: true)
               result = post_receive(err: $stderr, out: $stdout)
@@ -195,7 +195,7 @@ module OpenShift
             end
           end
 
-          result[:status] = RESULT_SUCCESS
+          result[:status] = ::OpenShift::Runtime::ApplicationContainer::RESULT_SUCCESS
           result
         end
 

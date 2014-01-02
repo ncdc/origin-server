@@ -68,6 +68,8 @@ module OpenShift
 
       GEAR_TO_GEAR_SSH = "/usr/bin/ssh -q -o 'BatchMode=yes' -o 'StrictHostKeyChecking=no' -i $OPENSHIFT_APP_SSH_KEY "
       DEFAULT_SKEL_DIR = PathUtils.join(OpenShift::Config::CONF_DIR,"skel")
+      RESULT_SUCCESS = 'success'
+      RESULT_FAILURE = 'failure'
       $OpenShift_ApplicationContainer_SSH_KEY_MUTEX = Mutex.new
 
       attr_reader :uuid, :application_uuid, :state, :container_name, :application_name, :namespace, :container_dir,
