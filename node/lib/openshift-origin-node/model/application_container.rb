@@ -35,6 +35,7 @@ require 'openshift-origin-node/utils/node_logger'
 require 'openshift-origin-node/utils/hourglass'
 require 'openshift-origin-node/utils/cgroups'
 require 'openshift-origin-node/utils/tc'
+require 'openshift-origin-node/utils/buffered_line_parser'
 require 'openshift-origin-common'
 require 'yaml'
 require 'active_model'
@@ -815,35 +816,54 @@ module OpenShift
         @gear_registry
       end
 
+      class MetricsLineProcessor
+        attr_accessor :cartridge
+
+        def initialize(container, cartridge=nil)
+          @container = container
+          @cartridge = cartridge
+        end
+
+        def process(line)
+          if @cartridge
+            puts "type=metric app=#{@container.application_uuid} gear=#{@container.uuid} cart=#{@cartridge.name} #{line}"
+          else
+            puts "type=metric app=#{@container.application_uuid} gear=#{@container.uuid} #{line}"
+          end
+        end
+      end
       #
       # Invokes all the cartridges bin/metrics + metrics action hook
       #
       def metrics
-        start_time = Time.now
+        processor = MetricsLineProcessor.new(self)
+        parser = ::OpenShift::Runtime::Utils::BufferedLineParser.new(2000, processor)
+
         @cartridge_model.each_cartridge do |cart|
           # Check if cartridge has a metrics entry in its manifest
           unless cart.metrics.nil?
             begin
-              result, error, _ = self.run_in_container_context(PathUtils.join(cart.path, "bin","metrics"))
-              result.split("\n").each do |line|
-                $stdout.write "type=metric app=#{self.application_uuid} gear=#{self.uuid} cart=#{cart.name} #{line}"
+              cart_metrics = PathUtils.join(@container_dir, cart.directory, "bin", "metrics")
+
+              if File.exist?(cart_metrics) and File.executable?(cart_metrics)
+                processor.cartridge = cart
+                run_in_container_context(cart_metrics, out: parser)
               end
             rescue => e
-              $stderr.write("Error retrieving cartridge metrics: #{e.message}")
+              $stderr.puts("Error retrieving cartridge metrics: #{e.message}")
             end
           end
         end
 
         begin
-          metrics_hook = PathUtils.join(@container_dir,"app-root","repo",".openshift","action_hooks","metrics")
+          metrics_hook = PathUtils.join(@container_dir, "app-root", "repo", ".openshift", "action_hooks", "metrics")
+
           if File.exist?(metrics_hook) and File.executable?(metrics_hook)
-            result, error, _ = self.run_in_container_context(metrics_hook)
-            result.split("\n").each do |line|
-              $stdout.write "type=metric app=#{self.application_uuid} gear=#{self.uuid} #{line}"
-            end
+            processor.cartridge = nil
+            run_in_container_context(metrics_hook, out: parser)
           end
         rescue => e
-          $stderr.write("Error retrieving application metrics: #{e.message}")
+          $stderr.puts("Error retrieving application metrics: #{e.message}")
         end
       end
 
@@ -863,14 +883,6 @@ module OpenShift
         params
       end
 
-      #
-      # Invokes all the cartridges bin/metrics + metrics action hook
-      #
-      def metrics
-        @cartridge_model.each do |cart|
-          result, error, exit_status  = oo_spawn(cart.path + "bin/metrics")
-        end
-      end
     end
   end
 end
